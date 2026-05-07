@@ -1,0 +1,11 @@
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import * as schema from "./schema";
+
+const connectionString = process.env.DATABASE_URL!;
+
+// Single connection (Supabase pooler ja gere o pool)
+const sql = postgres(connectionString, { prepare: false });
+
+export const db = drizzle(sql, { schema });
+export type DB = typeof db;
