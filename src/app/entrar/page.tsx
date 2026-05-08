@@ -42,6 +42,31 @@ export default async function EntrarPage({ searchParams }: { searchParams: Searc
   );
 }
 
+function errorTitle(code: string) {
+  switch (code) {
+    case "send_failed":     return "Não foi possível enviar o email";
+    case "invalid_email":   return "Email inválido";
+    case "no_code":         return "Link inválido ou já usado";
+    case "exchange_failed": return "Sessão não pôde ser criada";
+    default:                return "Algo correu mal";
+  }
+}
+
+function errorHelp(code: string) {
+  switch (code) {
+    case "send_failed":
+      return "Verifica o endereço e tenta de novo.";
+    case "invalid_email":
+      return "Indica um email no formato correto.";
+    case "no_code":
+      return "Talvez o link tenha expirado. Pede um novo.";
+    case "exchange_failed":
+      return "O link pode ter expirado ou a configuração de Auth na Supabase pode estar incompleta. Pede um novo link.";
+    default:
+      return "Tenta de novo.";
+  }
+}
+
 function FormView({ error, redirectTo }: { error?: string; redirectTo?: string }) {
   return (
     <>
@@ -69,9 +94,8 @@ function FormView({ error, redirectTo }: { error?: string; redirectTo?: string }
 
         {error && (
           <div className="rounded-md border border-danger/30 bg-danger-bg px-4 py-3 text-sm text-danger">
-            {error === "send_failed"
-              ? "Não foi possível enviar o email. Verifica o endereço e tenta de novo."
-              : "Algo correu mal. Tenta de novo."}
+            <strong className="block mb-1">{errorTitle(error)}</strong>
+            <span className="text-danger/85">{errorHelp(error)}</span>
           </div>
         )}
 

@@ -1,8 +1,9 @@
+import Link from "next/link";
 import { requireActiveOrg } from "@/lib/auth";
 import { db } from "@/lib/db/client";
-import { transactions } from "@/lib/db/schema";
-import { and, eq, gte, sql } from "drizzle-orm";
-import { formatEUR } from "@/lib/utils";
+import { transactions, categories, accounts } from "@/lib/db/schema";
+import { and, desc, eq, gte, sql } from "drizzle-orm";
+import { formatEUR, formatDate } from "@/lib/utils";
 
 export const metadata = { title: "Dashboard" };
 
@@ -41,6 +42,24 @@ export default async function DashboardPage() {
   const saldoTotal  = Number(allTimeAgg.entradas) - Number(allTimeAgg.saidas);
   const movsMes     = Number(monthAgg.total);
 
+  // Últimos movimentos (independente de data)
+  const recent = await db
+    .select({
+      id: transactions.id,
+      date: transactions.date,
+      type: transactions.type,
+      description: transactions.description,
+      amount: transactions.amount,
+      categoryName: categories.name,
+      accountName: accounts.name,
+    })
+    .from(transactions)
+    .leftJoin(categories, eq(transactions.categoryId, categories.id))
+    .leftJoin(accounts, eq(transactions.accountId, accounts.id))
+    .where(eq(transactions.orgId, ctx.orgId))
+    .orderBy(desc(transactions.date), desc(transactions.createdAt))
+    .limit(8);
+
   const monthName = today.toLocaleString("pt-PT", { month: "long", year: "numeric" });
   const greeting = greetingForHour(today.getHours());
 
@@ -68,7 +87,58 @@ export default async function DashboardPage() {
         <KpiCard label="Saldo Total (Sempre)"   value={formatEUR(saldoTotal)}  tone="gold" />
       </div>
 
-      {movsMes === 0 && <EmptyState />}
+      {recent.length === 0 && <EmptyState />}
+
+      {recent.length > 0 && (
+        <div className="mt-7 rounded-lg border border-[#D5D8DC] bg-white">
+          <div className="flex items-center justify-between border-b border-[#D5D8DC] px-5 py-3.5">
+            <div>
+              <h3 className="text-base font-bold">Últimos movimentos</h3>
+              <p className="text-xs text-[#4A4A5C]">{recent.length} mais recentes</p>
+            </div>
+            <Link href="/movimentos" className="text-sm font-semibold text-primary-600 hover:underline">
+              Ver tudo →
+            </Link>
+          </div>
+          <table className="w-full text-sm">
+            <thead className="bg-primary-50/40">
+              <tr>
+                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Data</th>
+                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Tipo</th>
+                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Descrição</th>
+                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Categoria</th>
+                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Conta</th>
+                <th className="px-5 py-2.5 text-right text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recent.map((r) => {
+                const isIn = r.type === "entrada";
+                return (
+                  <tr key={r.id} className="border-t border-[#D5D8DC] hover:bg-primary-50/20">
+                    <td className="px-5 py-3 whitespace-nowrap">{formatDate(r.date)}</td>
+                    <td className="px-5 py-3">
+                      <span className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
+                        isIn ? "bg-success-bg text-success" : "bg-danger-bg text-danger"
+                      }`}>
+                        {isIn ? "Entrada" : "Saída"}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3">{r.description}</td>
+                    <td className="px-5 py-3 text-[#4A4A5C]">{r.categoryName ?? "—"}</td>
+                    <td className="px-5 py-3 text-[#4A4A5C]">{r.accountName ?? "—"}</td>
+                    <td className={`px-5 py-3 text-right font-bold tabular-nums whitespace-nowrap ${
+                      isIn ? "text-success" : "text-danger"
+                    }`}>
+                      {isIn ? "+ " : "- "}{formatEUR(Number(r.amount))}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <p className="mt-12 text-center text-xs text-[#4A4A5C]">
         ✓ Aprovado por Contabilista Certificado · Alípio Monteiro · CC nº 32897
