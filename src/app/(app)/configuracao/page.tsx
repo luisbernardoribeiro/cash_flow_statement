@@ -48,13 +48,13 @@ export default async function ConfiguracaoPage({ searchParams }: { searchParams:
             <Field label="Nome" required>
               <input name="name" type="text" required maxLength={120} defaultValue={org.name}
                 disabled={ctx.role !== "owner" && ctx.role !== "admin"}
-                className="w-full rounded-md border border-white/10 bg-[#15151E] px-3 py-2.5 text-base disabled:bg-bg-soft disabled:text-white/40 focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20" />
+                className="w-full rounded-md border border-white/10 bg-[#15151E] px-3 py-2.5 text-base disabled:bg-white/5 disabled:text-white/40 focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20" />
             </Field>
             <Field label="NIF">
               <input name="nif" type="text" inputMode="numeric" pattern="[0-9]{9}" maxLength={9}
                 defaultValue={org.nif ?? ""} placeholder="500000000"
                 disabled={ctx.role !== "owner" && ctx.role !== "admin"}
-                className="w-full rounded-md border border-white/10 bg-[#15151E] px-3 py-2.5 text-base disabled:bg-bg-soft disabled:text-white/40 focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20" />
+                className="w-full rounded-md border border-white/10 bg-[#15151E] px-3 py-2.5 text-base disabled:bg-white/5 disabled:text-white/40 focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20" />
             </Field>
             <Field label="Empresa criada em">
               <p className="text-sm text-white/60">{new Date(org.createdAt).toLocaleString("pt-PT")}</p>

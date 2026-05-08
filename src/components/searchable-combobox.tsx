@@ -203,7 +203,7 @@ export function SearchableCombobox({
             return entries.map(([groupName, items]) => (
               <div key={groupName || "_"}>
                 {groupName && (
-                  <div className="bg-bg-soft/60 px-4 py-1 text-[10px] font-bold uppercase tracking-wider text-white/60">
+                  <div className="bg-white/5 px-4 py-1 text-[10px] font-bold uppercase tracking-wider text-white/60">
                     {groupName}
                   </div>
                 )}

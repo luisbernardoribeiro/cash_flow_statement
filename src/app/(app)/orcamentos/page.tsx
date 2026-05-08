@@ -129,7 +129,7 @@ export default async function OrcamentosPage({ searchParams }: { searchParams: S
           <select name="year" defaultValue={String(year)} className="rounded-md border border-white/10 bg-[#15151E] px-3 py-2 text-sm">
             {yearOptions.map((y) => <option key={y} value={y}>{y}</option>)}
           </select>
-          <button type="submit" className="rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white hover:bg-primary-700">
+          <button type="submit" className="rounded-md bg-gold-500 px-3 py-2 text-sm font-semibold text-ink shadow-sm transition-colors hover:bg-gold-600">
             Ver
           </button>
         </form>
@@ -311,7 +311,7 @@ function BudgetTable({
 
       {/* Desktop: tabela */}
       <table className="hidden w-full text-sm md:table">
-        <thead className="bg-bg-soft/50">
+        <thead className="bg-white/5">
           <tr>
             <Th>Categoria</Th>
             <Th>Grupo</Th>
@@ -402,7 +402,7 @@ function UsageBar({ pct, tone }: { pct: number; tone: "success" | "danger" }) {
   }
   return (
     <div className="flex items-center justify-end gap-2">
-      <div className="h-1.5 w-20 overflow-hidden rounded-full bg-[#E5E7EB]">
+      <div className="h-1.5 w-20 overflow-hidden rounded-full bg-white/10">
         <div
           className={`h-full ${barColor} transition-all`}
           style={{ width: `${cap}%` }}

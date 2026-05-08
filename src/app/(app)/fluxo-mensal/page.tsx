@@ -113,7 +113,7 @@ export default async function FluxoMensalPage({ searchParams }: { searchParams: 
             <select id="ano" name="ano" defaultValue={String(year)} className="rounded-md border border-white/10 bg-[#15151E] px-3 py-2 text-sm">
               {years.map((y) => <option key={y} value={y}>{y}</option>)}
             </select>
-            <button type="submit" className="rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white hover:bg-primary-700">
+            <button type="submit" className="rounded-md bg-gold-500 px-3 py-2 text-sm font-semibold text-ink shadow-sm transition-colors hover:bg-gold-600">
               Ver
             </button>
           </form>

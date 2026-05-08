@@ -217,7 +217,7 @@ function FiltersBar({
       </Select>
       <Input name="de"  type="date" value={params.de}  title="De" />
       <Input name="ate" type="date" value={params.ate} title="Até" />
-      <button type="submit" className="rounded-md bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700">
+      <button type="submit" className="rounded-md bg-gold-500 px-4 py-2 text-sm font-semibold text-ink shadow-sm transition-colors hover:bg-gold-600">
         Filtrar
       </button>
       {hasFilters && (

@@ -8,6 +8,7 @@
     color: rgba(255, 255, 255, 0.9);
     -webkit-font-smoothing: antialiased;
     background: #0A0A0F;
+    color-scheme: dark;
   }
   body {
     background: #0A0A0F;
@@ -17,6 +18,30 @@
     font-family: theme(fontFamily.display);
     font-weight: 700;
     color: #ffffff;
+  }
+  /* Dark form controls — overrides Tailwind preflight so typed text is white,
+     placeholders are visible, and bg matches our card surface */
+  input, select, textarea {
+    color: #ffffff;
+    background-color: #15151E;
+  }
+  input::placeholder, textarea::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
+  input:disabled, select:disabled, textarea:disabled {
+    color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+  /* Date inputs: invert the calendar icon so it's visible on dark bg */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) opacity(0.6);
+    cursor: pointer;
+  }
+  /* Native autofill shadow — keep dark */
+  input:-webkit-autofill {
+    -webkit-text-fill-color: #ffffff;
+    -webkit-box-shadow: 0 0 0 1000px #15151E inset;
+    caret-color: #ffffff;
   }
 }
 
