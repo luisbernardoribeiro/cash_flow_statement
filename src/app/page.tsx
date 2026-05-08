@@ -29,21 +29,21 @@ export default function HomePage() {
       >
         <div className="mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-[1.15fr_1fr]">
           <div>
-            <span className="cc-badge">Aprovado por Contabilista Certificado · CC nº {CC_NUMBER}</span>
+            <span className="cc-badge">Criado por Contabilista Certificado · CC nº {CC_NUMBER}</span>
             <h1 className="mt-6 text-4xl font-extrabold leading-[1.1] tracking-tight lg:text-6xl">
-              O teu mapa de tesouraria,{" "}
-              <em className="not-italic text-primary-600">sempre atualizado</em>.
+              O mapa de tesouraria{" "}
+              <em className="not-italic text-primary-600">do teu contabilista</em>,
+              em app.
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-[#4A4A5C] lg:text-xl">
-              O método de tesouraria do <strong>Alípio Monteiro CC</strong> — anos de experiência
-              com PMEs — agora em app: categorias certas, fluxos prontos, no computador e no telemóvel.
+              Vinte anos de experiência do <strong>Alípio Monteiro CC</strong> a controlar a tesouraria de PMEs portuguesas, agora numa plataforma: <strong>categorias prontas, fluxos definidos, regras certas</strong>. Não precisas de pensar — basta registar.
             </p>
             <div className="mt-7 flex flex-wrap gap-4">
-              <Link href="/registar" className="btn btn-primary">
+              <Link href="/entrar" className="btn btn-primary">
                 Experimentar 14 dias grátis →
               </Link>
-              <Link href="/demo" className="btn btn-ghost">
-                Marcar demonstração
+              <Link href="/entrar" className="btn btn-ghost">
+                Já tenho conta
               </Link>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-6 text-sm text-[#4A4A5C]">

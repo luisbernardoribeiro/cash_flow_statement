@@ -15,9 +15,9 @@ export default async function ImportarPage({ searchParams }: { searchParams: Sea
   return (
     <div className="px-10 py-7">
       <PageHeader
-        title="Importar histórico"
-        breadcrumb={[{ label: "Início", href: "/dashboard" }, { label: "Importar histórico" }]}
-        sub="Já usavas o mapa de tesouraria da GI em Excel? Carrega aqui o ficheiro para passar o histórico todo para a app de uma só vez."
+        title="Importar (ferramenta interna)"
+        breadcrumb={[{ label: "Início", href: "/dashboard" }, { label: "Importar" }]}
+        sub="🔒 Página interna · usada para popular dados de demonstração ou migração inicial. Não está visível aos clientes."
       />
 
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">

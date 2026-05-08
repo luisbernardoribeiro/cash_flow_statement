@@ -79,10 +79,7 @@ export default async function MovimentosPage({ searchParams }: { searchParams: S
         breadcrumb={[{ label: "Início", href: "/dashboard" }, { label: "Movimentos" }]}
         sub={`${total} movimento${total === 1 ? "" : "s"} no filtro atual`}
         actions={
-          <>
-            <Link href="/importar" className="btn btn-ghost">Importar Excel</Link>
-            <Link href="/movimentos/novo" className="btn btn-primary">+ Novo Movimento</Link>
-          </>
+          <Link href="/movimentos/novo" className="btn btn-primary">+ Novo Movimento</Link>
         }
       />
 
@@ -258,13 +255,10 @@ function Pagination({ page, totalPages, params }: { page: number; totalPages: nu
 function EmptyState() {
   return (
     <div className="rounded-2xl border-2 border-dashed border-primary-200 bg-white p-10 text-center">
-      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-50 text-2xl">📥</div>
-      <h3 className="text-xl font-bold">Nenhum movimento encontrado</h3>
-      <p className="mt-2 mb-5 text-sm text-[#4A4A5C]">Cria o primeiro movimento ou importa o teu mapa em Excel.</p>
-      <div className="flex justify-center gap-3 flex-wrap">
-        <Link href="/movimentos/novo" className="btn btn-primary">+ Novo Movimento</Link>
-        <Link href="/importar" className="btn btn-ghost">Importar Excel</Link>
-      </div>
+      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-50 text-2xl">📒</div>
+      <h3 className="text-xl font-bold">Sem movimentos no filtro atual</h3>
+      <p className="mt-2 mb-5 text-sm text-[#4A4A5C]">Limpa os filtros para ver tudo, ou regista um novo movimento.</p>
+      <Link href="/movimentos/novo" className="btn btn-primary">+ Novo Movimento</Link>
     </div>
   );
 }

@@ -235,16 +235,14 @@ function EmptyState() {
   return (
     <div className="mt-10 rounded-2xl border-2 border-dashed border-primary-200 bg-white p-10 text-center">
       <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-50 text-2xl">
-        📥
+        ✨
       </div>
-      <h3 className="text-xl font-bold">Sem movimentos este mês</h3>
-      <p className="mt-2 mb-5 text-sm text-[#4A4A5C]">
-        Começa por registar o teu primeiro movimento ou importa o teu mapa em Excel.
+      <h3 className="text-xl font-bold">Tudo pronto. Vamos lá começar?</h3>
+      <p className="mx-auto mt-2 mb-5 max-w-md text-sm text-[#4A4A5C]">
+        A tua app já vem com as 20 categorias e as 3 contas do método GI.
+        Regista o primeiro movimento — uma venda, uma compra, uma despesa.
       </p>
-      <div className="flex justify-center gap-3 flex-wrap">
-        <a href="/movimentos/novo" className="btn btn-primary">+ Novo Movimento</a>
-        <a href="/importar" className="btn btn-ghost">Importar Excel</a>
-      </div>
+      <a href="/movimentos/novo" className="btn btn-primary">+ Registar primeiro movimento</a>
     </div>
   );
 }

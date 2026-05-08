@@ -36,13 +36,16 @@ export default async function OnboardingPage({ searchParams }: { searchParams: S
         <div className="rounded-2xl border border-primary-100 bg-white p-8 shadow-md">
           <h1 className="text-2xl font-bold mb-2">Bem-vindo ao MAPA 👋</h1>
           <p className="text-sm text-[#4A4A5C] mb-2">
-            Para começares, regista a tua empresa. Ao criar, vamos preparar a app com:
+            Regista o nome da tua empresa e está feito. A app já vem montada com o método do <strong>Alípio Monteiro CC</strong>:
           </p>
           <ul className="mb-6 space-y-1 text-sm text-[#4A4A5C]">
-            <li>✓ <strong className="text-ink">20 categorias</strong> do método Alípio Monteiro CC (Vendas Diárias, Compras, Renda, Vencimentos…)</li>
-            <li>✓ <strong className="text-ink">3 contas</strong> base (Caixa, TPA, Banco) — podes adicionar mais</li>
-            <li>✓ Estrutura pronta para começar a registar movimentos</li>
+            <li>✓ <strong className="text-ink">20 categorias</strong> — Vendas, Compras, Renda, Vencimentos, Eletricidade…</li>
+            <li>✓ <strong className="text-ink">3 contas</strong> base — Caixa, TPA, Banco</li>
+            <li>✓ Dashboard, fluxo mensal, relatórios — tudo configurado</li>
           </ul>
+          <p className="mb-6 text-xs text-[#4A4A5C]">
+            <strong>Não precisas de importar nada.</strong> Esta é a tua nova versão do mapa. Logo a seguir registas o primeiro movimento.
+          </p>
 
           <form action={createOrganization} className="space-y-4">
             <div>
