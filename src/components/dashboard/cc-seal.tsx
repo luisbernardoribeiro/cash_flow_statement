@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { AlipioPhoto } from "@/components/alipio-photo";
 
 export function CCSeal({ showPhoto = true }: { showPhoto?: boolean }) {
   return (
@@ -8,15 +8,10 @@ export function CCSeal({ showPhoto = true }: { showPhoto?: boolean }) {
       className="inline-flex items-center gap-3 rounded-full border border-primary-200 bg-gradient-to-br from-primary-50 to-white py-1.5 pl-1.5 pr-4 shadow-sm"
     >
       {showPhoto ? (
-        <span className="relative inline-block h-10 w-10 shrink-0">
-          <Image
-            src="/people/alipio.jpg"
-            alt=""
-            fill
-            sizes="40px"
-            className="rounded-full border-2 border-gold-500 object-cover"
-          />
-        </span>
+        <AlipioPhoto
+          className="h-10 w-10 shrink-0 border-2 border-gold-500"
+          initialsClass="text-sm"
+        />
       ) : (
         <span
           aria-hidden="true"
