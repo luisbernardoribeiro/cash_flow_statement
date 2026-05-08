@@ -91,116 +91,108 @@ export default async function MovimentosPage({ searchParams }: { searchParams: S
         }
       />
 
+      <FiltersBar params={params} cats={cats} sups={sups} accs={accs} hasFilters={hasFilters} />
+
       <SummaryStrip entradas={entradas} saidas={saidas} total={total} hasFilters={hasFilters} />
 
-      {/* Form-anchor invisível — todos os inputs filter abaixo apontam para este form via attribute form="filtros" */}
-      <form id="filtros" method="get" className="hidden" />
-
-      <div className="overflow-x-auto rounded-lg border border-[#D5D8DC] bg-white">
-        <table className="w-full text-sm">
-          <thead>
-            {/* Linha 1: títulos */}
-            <tr className="bg-primary-50/60">
-              <Th>Data</Th>
-              <Th>Tipo</Th>
-              <Th>Descrição</Th>
-              <Th>Categoria</Th>
-              <Th>Fornecedor</Th>
-              <Th>Conta</Th>
-              <Th align="right">Valor</Th>
-            </tr>
-            {/* Linha 2: filtros inline */}
-            <tr className="border-t border-[#D5D8DC] bg-white">
-              <ThFilter>
-                <div className="flex flex-col gap-1">
-                  <FInput name="de"  type="date" value={params.de}  title="De" />
-                  <FInput name="ate" type="date" value={params.ate} title="Até" />
-                </div>
-              </ThFilter>
-              <ThFilter>
-                <FSelect name="tipo" value={params.tipo}>
-                  <option value="">Todos</option>
-                  <option value="entrada">Entrada</option>
-                  <option value="saida">Saída</option>
-                </FSelect>
-              </ThFilter>
-              <ThFilter>
-                <FInput name="q" type="search" value={params.q} placeholder="Procurar…" />
-              </ThFilter>
-              <ThFilter>
-                <FSelect name="cat" value={params.cat}>
-                  <option value="">Todas</option>
-                  {cats.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </FSelect>
-              </ThFilter>
-              <ThFilter>
-                <FSelect name="forn" value={params.forn}>
-                  <option value="">Todos</option>
-                  {sups.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-                </FSelect>
-              </ThFilter>
-              <ThFilter>
-                <FSelect name="conta" value={params.conta}>
-                  <option value="">Todas</option>
-                  {accs.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
-                </FSelect>
-              </ThFilter>
-              <ThFilter align="right">
-                <div className="flex justify-end gap-1.5">
-                  <button form="filtros" type="submit" className="rounded-md bg-primary-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary-700">
-                    Filtrar
-                  </button>
-                  {hasFilters && (
-                    <Link href="/movimentos" className="rounded-md border border-[#D5D8DC] bg-white px-3 py-1.5 text-xs font-semibold text-[#4A4A5C] hover:bg-primary-50">
-                      Limpar
-                    </Link>
-                  )}
-                </div>
-              </ThFilter>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="px-6 py-16 text-center">
-                  <EmptyState hasFilters={hasFilters} />
-                </td>
-              </tr>
-            ) : (
-              rows.map((r) => (
-                <tr key={r.id} className="border-t border-[#D5D8DC] hover:bg-primary-50/30 cursor-pointer">
-                  <td className="px-4 py-3.5 whitespace-nowrap">
-                    <Link href={`/movimentos/${r.id}`} className="block">{formatDate(r.date)}</Link>
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <Link href={`/movimentos/${r.id}`} className="block">
-                      <Badge tone={r.type === "entrada" ? "success" : "danger"}>
-                        {r.type === "entrada" ? "Entrada" : "Saída"}
-                      </Badge>
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <Link href={`/movimentos/${r.id}`} className="block hover:text-primary-600">{r.description}</Link>
-                  </td>
-                  <td className="px-4 py-3.5 text-[#4A4A5C]">{r.categoryName ?? "—"}</td>
-                  <td className="px-4 py-3.5 text-[#4A4A5C]">{r.supplierName ?? "—"}</td>
-                  <td className="px-4 py-3.5 text-[#4A4A5C]">{r.accountName ?? "—"}</td>
-                  <td className={`px-4 py-3.5 text-right font-bold tabular-nums whitespace-nowrap ${
-                    r.type === "entrada" ? "text-success" : "text-danger"
-                  }`}>
-                    <Link href={`/movimentos/${r.id}`} className="block">
-                      {r.type === "entrada" ? "+ " : "- "}{formatEUR(Number(r.amount))}
-                    </Link>
-                  </td>
+      {rows.length === 0 ? (
+        <EmptyState hasFilters={hasFilters} />
+      ) : (
+        <>
+          <div className="overflow-hidden rounded-lg border border-[#D5D8DC] bg-white">
+            <table className="w-full text-sm">
+              <thead className="bg-primary-50/60">
+                <tr>
+                  <Th>Data</Th>
+                  <Th>Tipo</Th>
+                  <Th>Descrição</Th>
+                  <Th>Categoria</Th>
+                  <Th>Fornecedor</Th>
+                  <Th>Conta</Th>
+                  <Th align="right">Valor</Th>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {totalPages > 1 && rows.length > 0 && <Pagination page={page} totalPages={totalPages} params={params} />}
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr key={r.id} className="border-t border-[#D5D8DC] hover:bg-primary-50/30 cursor-pointer">
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <Link href={`/movimentos/${r.id}`} className="block">{formatDate(r.date)}</Link>
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <Link href={`/movimentos/${r.id}`} className="block">
+                        <Badge tone={r.type === "entrada" ? "success" : "danger"}>
+                          {r.type === "entrada" ? "Entrada" : "Saída"}
+                        </Badge>
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <Link href={`/movimentos/${r.id}`} className="block hover:text-primary-600">{r.description}</Link>
+                    </td>
+                    <td className="px-4 py-3.5 text-[#4A4A5C]">{r.categoryName ?? "—"}</td>
+                    <td className="px-4 py-3.5 text-[#4A4A5C]">{r.supplierName ?? "—"}</td>
+                    <td className="px-4 py-3.5 text-[#4A4A5C]">{r.accountName ?? "—"}</td>
+                    <td className={`px-4 py-3.5 text-right font-bold tabular-nums whitespace-nowrap ${
+                      r.type === "entrada" ? "text-success" : "text-danger"
+                    }`}>
+                      <Link href={`/movimentos/${r.id}`} className="block">
+                        {r.type === "entrada" ? "+ " : "- "}{formatEUR(Number(r.amount))}
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {totalPages > 1 && <Pagination page={page} totalPages={totalPages} params={params} />}
+        </>
+      )}
     </div>
+  );
+}
+
+function FiltersBar({
+  params, cats, sups, accs, hasFilters,
+}: {
+  params: { tipo?: string; cat?: string; forn?: string; conta?: string; q?: string; de?: string; ate?: string };
+  cats: Array<{ id: string; name: string; type: string }>;
+  sups: Array<{ id: string; name: string }>;
+  accs: Array<{ id: string; name: string }>;
+  hasFilters: boolean;
+}) {
+  return (
+    <form
+      method="get"
+      className="mb-4 grid grid-cols-2 gap-2 rounded-lg border border-[#D5D8DC] bg-white p-3 md:grid-cols-3 lg:flex lg:flex-wrap lg:items-center"
+    >
+      <Input name="q" type="search" value={params.q} placeholder="Procurar descrição…" wide />
+      <Select name="tipo" value={params.tipo}>
+        <option value="">Tipo: Todos</option>
+        <option value="entrada">Apenas Entradas</option>
+        <option value="saida">Apenas Saídas</option>
+      </Select>
+      <Select name="cat" value={params.cat}>
+        <option value="">Categoria: Todas</option>
+        {cats.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+      </Select>
+      <Select name="forn" value={params.forn}>
+        <option value="">Fornecedor: Todos</option>
+        {sups.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+      </Select>
+      <Select name="conta" value={params.conta}>
+        <option value="">Conta: Todas</option>
+        {accs.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+      </Select>
+      <Input name="de"  type="date" value={params.de}  title="De" />
+      <Input name="ate" type="date" value={params.ate} title="Até" />
+      <button type="submit" className="rounded-md bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700">
+        Filtrar
+      </button>
+      {hasFilters && (
+        <Link href="/movimentos" className="text-sm font-medium text-primary-600 hover:underline lg:ml-auto">
+          Limpar
+        </Link>
+      )}
+    </form>
   );
 }
 
@@ -212,38 +204,28 @@ function Th({ children, align }: { children: React.ReactNode; align?: "right" })
   );
 }
 
-function ThFilter({ children, align }: { children: React.ReactNode; align?: "right" }) {
-  return <th className={`px-3 py-2 text-${align ?? "left"} font-normal align-top`}>{children}</th>;
+function Select({ name, value, children }: { name: string; value?: string; children: React.ReactNode }) {
+  return (
+    <select name={name} defaultValue={value ?? ""} className="rounded-md border border-[#D5D8DC] bg-white px-3 py-2 text-sm">
+      {children}
+    </select>
+  );
 }
 
-function FInput({
-  name, type, value, placeholder, title,
+function Input({
+  name, type, value, placeholder, title, wide,
 }: {
-  name: string; type: string; value?: string; placeholder?: string; title?: string;
+  name: string; type: string; value?: string; placeholder?: string; title?: string; wide?: boolean;
 }) {
   return (
     <input
-      form="filtros"
       name={name}
       type={type}
       defaultValue={value}
       placeholder={placeholder}
       title={title}
-      className="w-full rounded-md border border-[#D5D8DC] bg-white px-2 py-1 text-xs focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-600/30"
+      className={`rounded-md border border-[#D5D8DC] bg-white px-3 py-2 text-sm ${wide ? "min-w-[220px] flex-1" : ""}`}
     />
-  );
-}
-
-function FSelect({ name, value, children }: { name: string; value?: string; children: React.ReactNode }) {
-  return (
-    <select
-      form="filtros"
-      name={name}
-      defaultValue={value ?? ""}
-      className="w-full rounded-md border border-[#D5D8DC] bg-white px-2 py-1 text-xs focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-600/30"
-    >
-      {children}
-    </select>
   );
 }
 
@@ -256,7 +238,7 @@ function SummaryStrip({
   entradas, saidas, total, hasFilters,
 }: { entradas: number; saidas: number; total: number; hasFilters: boolean }) {
   return (
-    <div className="mb-3 flex flex-wrap gap-7 rounded-lg border border-[#D5D8DC] bg-white px-5 py-3.5">
+    <div className="mb-4 flex flex-wrap gap-7 rounded-lg border border-[#D5D8DC] bg-white px-5 py-3.5">
       <Stat label={`Entradas${hasFilters ? " (filtro)" : ""}`} value={`+ ${formatEUR(entradas)}`} tone="success" />
       <Stat label={`Saídas${hasFilters ? " (filtro)" : ""}`}   value={`- ${formatEUR(saidas)}`}   tone="danger" />
       <Stat label={`Saldo${hasFilters ? " (filtro)" : ""}`}    value={formatEUR(entradas - saidas)} tone="primary" />
@@ -301,7 +283,7 @@ function Pagination({ page, totalPages, params }: { page: number; totalPages: nu
 
 function EmptyState({ hasFilters }: { hasFilters: boolean }) {
   return (
-    <div>
+    <div className="rounded-2xl border-2 border-dashed border-primary-200 bg-white p-10 text-center">
       <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-50 text-2xl">📒</div>
       <h3 className="text-xl font-bold">
         {hasFilters ? "Sem movimentos no filtro atual" : "Sem movimentos"}
