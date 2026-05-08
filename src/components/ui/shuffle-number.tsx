@@ -13,11 +13,13 @@ export function ShuffleNumber({
   value,
   delta,
   isNegative,
+  inverted,
   className,
 }: {
   value: number;
   delta: number | null;
   isNegative?: boolean;
+  inverted?: boolean;
   className?: string;
 }) {
   const canAnimate = useCanAnimate();
@@ -35,7 +37,9 @@ export function ShuffleNumber({
         }}
         className={cn(
           "font-extrabold leading-[1] tracking-tight tabular-nums text-4xl sm:text-5xl xl:text-6xl",
-          isNegative ? "text-danger" : "text-primary-700",
+          inverted
+            ? (isNegative ? "text-rose-200" : "text-white")
+            : (isNegative ? "text-danger" : "text-primary-700"),
           className,
         )}
       />
@@ -43,8 +47,10 @@ export function ShuffleNumber({
       {delta !== null && (
         <motion.span
           className={cn(
-            "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold text-white shadow-sm transition-colors",
-            delta >= 0 ? "bg-success" : "bg-danger",
+            "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm transition-colors",
+            delta >= 0
+              ? (inverted ? "bg-emerald-400/95 text-emerald-950" : "bg-success text-white")
+              : (inverted ? "bg-rose-400/95 text-rose-950" : "bg-danger text-white"),
           )}
           layout={canAnimate}
           transition={{ layout: { duration: 0.9, bounce: 0, type: "spring" } }}

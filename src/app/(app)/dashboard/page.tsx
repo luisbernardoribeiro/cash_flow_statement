@@ -120,6 +120,16 @@ export default async function DashboardPage() {
 
   const hasAnyChartData = monthlyData.some((m) => m.entradas > 0 || m.saidas > 0);
 
+  // Sparkline do hero: cumulative balance ao fim de cada um dos últimos 6 meses.
+  // Trabalhamos para trás a partir do saldoTotal (que é o estado após o último mês com movs).
+  const sparkSource = monthlyData.slice(-6);
+  const sparklineData: number[] = new Array(sparkSource.length);
+  let runningBal = saldoTotal;
+  for (let i = sparkSource.length - 1; i >= 0; i--) {
+    sparklineData[i] = runningBal;
+    runningBal -= sparkSource[i].entradas - sparkSource[i].saidas;
+  }
+
   return (
     <div className="px-4 py-5 md:px-10 md:py-7">
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between md:mb-8">
@@ -138,6 +148,7 @@ export default async function DashboardPage() {
         deltaPct={saldoDeltaPct}
         greeting={greeting}
         orgName={ctx.orgName}
+        sparklineData={sparklineData}
       />
 
       {/* Divider dourado entre hero e KPIs mensais */}
