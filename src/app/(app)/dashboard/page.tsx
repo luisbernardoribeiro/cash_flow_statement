@@ -4,6 +4,7 @@ import { db } from "@/lib/db/client";
 import { transactions, categories, accounts } from "@/lib/db/schema";
 import { and, desc, eq, gte, sql } from "drizzle-orm";
 import { formatEUR, formatDate } from "@/lib/utils";
+import { MonthlyBarChart, type MonthBar } from "@/components/monthly-chart";
 
 export const metadata = { title: "Dashboard" };
 
@@ -41,6 +42,25 @@ export default async function DashboardPage() {
   const liquidoMes  = entradasMes - saidasMes;
   const saldoTotal  = Number(allTimeAgg.entradas) - Number(allTimeAgg.saidas);
   const movsMes     = Number(monthAgg.total);
+
+  // Agregação mensal dos últimos 12 meses para o gráfico
+  const yearAgo = new Date();
+  yearAgo.setMonth(yearAgo.getMonth() - 11);
+  yearAgo.setDate(1);
+  const yearAgoStr = yearAgo.toISOString().slice(0, 10);
+
+  const monthlyRows = await db
+    .select({
+      ym:       sql<string>`TO_CHAR(${transactions.date}, 'YYYY-MM')`,
+      entradas: sql<string>`COALESCE(SUM(CASE WHEN ${transactions.type} = 'entrada' THEN ${transactions.amount} ELSE 0 END), 0)`,
+      saidas:   sql<string>`COALESCE(SUM(CASE WHEN ${transactions.type} = 'saida'   THEN ${transactions.amount} ELSE 0 END), 0)`,
+    })
+    .from(transactions)
+    .where(and(eq(transactions.orgId, ctx.orgId), gte(transactions.date, yearAgoStr)))
+    .groupBy(sql`TO_CHAR(${transactions.date}, 'YYYY-MM')`)
+    .orderBy(sql`TO_CHAR(${transactions.date}, 'YYYY-MM')`);
+
+  const monthlyData: MonthBar[] = buildMonthlySeries(monthlyRows, yearAgo);
 
   // Últimos movimentos (independente de data)
   const recent = await db
@@ -88,6 +108,18 @@ export default async function DashboardPage() {
       </div>
 
       {recent.length === 0 && <EmptyState />}
+
+      {recent.length > 0 && monthlyData.some((m) => m.entradas > 0 || m.saidas > 0) && (
+        <div className="mt-7 rounded-lg border border-[#D5D8DC] bg-white p-5">
+          <div className="mb-3 flex items-start justify-between">
+            <div>
+              <h3 className="text-base font-bold">Entradas vs Saídas</h3>
+              <p className="text-xs text-[#4A4A5C]">Últimos 12 meses</p>
+            </div>
+          </div>
+          <MonthlyBarChart data={monthlyData} />
+        </div>
+      )}
 
       {recent.length > 0 && (
         <div className="mt-7 rounded-lg border border-[#D5D8DC] bg-white">
@@ -151,6 +183,27 @@ function greetingForHour(h: number) {
   if (h < 12) return "Bom dia";
   if (h < 19) return "Boa tarde";
   return "Boa noite";
+}
+
+function buildMonthlySeries(
+  rows: Array<{ ym: string; entradas: string; saidas: string }>,
+  startMonth: Date,
+): MonthBar[] {
+  const map = new Map(rows.map((r) => [r.ym, r]));
+  const result: MonthBar[] = [];
+  const monthLabels = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+  const cursor = new Date(startMonth.getTime());
+  for (let i = 0; i < 12; i++) {
+    const ym = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, "0")}`;
+    const row = map.get(ym);
+    result.push({
+      month: `${monthLabels[cursor.getMonth()]}/${String(cursor.getFullYear()).slice(-2)}`,
+      entradas: row ? Number(row.entradas) : 0,
+      saidas:   row ? Number(row.saidas)   : 0,
+    });
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+  return result;
 }
 
 function KpiCard({

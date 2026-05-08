@@ -109,21 +109,29 @@ export default async function MovimentosPage({ searchParams }: { searchParams: S
               </thead>
               <tbody>
                 {rows.map((r) => (
-                  <tr key={r.id} className="border-t border-[#D5D8DC] hover:bg-primary-50/30">
-                    <td className="px-4 py-3.5 whitespace-nowrap">{formatDate(r.date)}</td>
-                    <td className="px-4 py-3.5">
-                      <Badge tone={r.type === "entrada" ? "success" : "danger"}>
-                        {r.type === "entrada" ? "Entrada" : "Saída"}
-                      </Badge>
+                  <tr key={r.id} className="border-t border-[#D5D8DC] hover:bg-primary-50/30 cursor-pointer">
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <Link href={`/movimentos/${r.id}`} className="block">{formatDate(r.date)}</Link>
                     </td>
-                    <td className="px-4 py-3.5">{r.description}</td>
+                    <td className="px-4 py-3.5">
+                      <Link href={`/movimentos/${r.id}`} className="block">
+                        <Badge tone={r.type === "entrada" ? "success" : "danger"}>
+                          {r.type === "entrada" ? "Entrada" : "Saída"}
+                        </Badge>
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <Link href={`/movimentos/${r.id}`} className="block hover:text-primary-600">{r.description}</Link>
+                    </td>
                     <td className="px-4 py-3.5 text-[#4A4A5C]">{r.categoryName ?? "—"}</td>
                     <td className="px-4 py-3.5 text-[#4A4A5C]">{r.supplierName ?? "—"}</td>
                     <td className="px-4 py-3.5 text-[#4A4A5C]">{r.accountName ?? "—"}</td>
                     <td className={`px-4 py-3.5 text-right font-bold tabular-nums whitespace-nowrap ${
                       r.type === "entrada" ? "text-success" : "text-danger"
                     }`}>
-                      {r.type === "entrada" ? "+ " : "- "}{formatEUR(Number(r.amount))}
+                      <Link href={`/movimentos/${r.id}`} className="block">
+                        {r.type === "entrada" ? "+ " : "- "}{formatEUR(Number(r.amount))}
+                      </Link>
                     </td>
                   </tr>
                 ))}

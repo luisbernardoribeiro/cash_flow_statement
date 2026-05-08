@@ -67,6 +67,8 @@ export async function deleteTransaction(formData: FormData) {
 
   revalidatePath("/movimentos");
   revalidatePath("/dashboard");
+  revalidatePath("/fluxo-mensal");
+  redirect("/movimentos");
 }
 
 function nullableUuid(v: FormDataEntryValue | null): string | null {
