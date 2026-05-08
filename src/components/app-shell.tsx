@@ -76,7 +76,7 @@ export function AppShell({
 
         <aside
           className={cn(
-            "fixed inset-y-0 left-0 z-50 flex w-60 flex-col bg-primary-600 text-white transition-all duration-200 md:static md:translate-x-0",
+            "fixed inset-y-0 left-0 z-50 flex w-60 flex-col bg-primary-600 text-white transition-all duration-200 md:sticky md:top-0 md:h-screen md:translate-x-0",
             sidebarWidth,
             collapsed ? "md:px-2 md:py-4" : "p-5",
             !collapsed && "p-5",
