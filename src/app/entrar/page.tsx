@@ -19,8 +19,9 @@ export default async function EntrarPage({ searchParams }: { searchParams: Searc
   return (
     <main className="min-h-screen bg-primary-50/30 flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
-        <Link href="/" className="mb-8 flex items-center gap-3 justify-center">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-600 font-extrabold text-white">M</span>
+        <Link href="/" className="mb-8 flex items-center gap-3 justify-center" aria-label="MAPA Tesouraria — by GI ADVISE">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/gi-mark.svg" alt="" className="h-10 w-10" />
           <span className="text-xl font-extrabold tracking-tight text-primary-600">
             MAPA <span className="font-normal italic text-primary-400">Tesouraria</span>
           </span>
