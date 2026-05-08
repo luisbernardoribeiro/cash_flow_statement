@@ -102,6 +102,50 @@ export default async function DashboardPage() {
     .orderBy(desc(transactions.date), desc(transactions.createdAt))
     .limit(8);
 
+  // Top 5 categorias por saída no mês ancorado (último mês com dados)
+  const anchorMonthStart = `${anchor.getFullYear()}-${String(anchor.getMonth() + 1).padStart(2, "0")}-01`;
+  const anchorNextMonthStart = new Date(anchor.getFullYear(), anchor.getMonth() + 1, 1)
+    .toISOString().slice(0, 10);
+
+  const topCategorias = await db
+    .select({
+      name: categories.name,
+      total: sql<string>`COALESCE(SUM(${transactions.amount}), 0)`,
+    })
+    .from(transactions)
+    .leftJoin(categories, eq(transactions.categoryId, categories.id))
+    .where(
+      and(
+        eq(transactions.orgId, ctx.orgId),
+        eq(transactions.type, "saida"),
+        gte(transactions.date, anchorMonthStart),
+        sql`${transactions.date} < ${anchorNextMonthStart}`,
+      ),
+    )
+    .groupBy(categories.name)
+    .orderBy(sql`SUM(${transactions.amount}) DESC`)
+    .limit(5);
+
+  // Quick stats do mês ancorado
+  const [quickStats] = await db
+    .select({
+      count: sql<number>`COUNT(*)`,
+      maxEntrada: sql<string>`COALESCE(MAX(${transactions.amount}) FILTER (WHERE ${transactions.type} = 'entrada'), 0)`,
+      maxSaida: sql<string>`COALESCE(MAX(${transactions.amount}) FILTER (WHERE ${transactions.type} = 'saida'), 0)`,
+      avgValor: sql<string>`COALESCE(AVG(${transactions.amount}), 0)`,
+    })
+    .from(transactions)
+    .where(
+      and(
+        eq(transactions.orgId, ctx.orgId),
+        gte(transactions.date, anchorMonthStart),
+        sql`${transactions.date} < ${anchorNextMonthStart}`,
+      ),
+    );
+
+  const anchorMonthName = anchor.toLocaleString("pt-PT", { month: "long" });
+  const topCategoriasMax = topCategorias.length > 0 ? Math.max(...topCategorias.map((c) => Number(c.total))) : 0;
+
   const monthName = today.toLocaleString("pt-PT", { month: "long", year: "numeric" });
   const greeting = greetingForHour(today.getHours());
 
@@ -204,11 +248,12 @@ export default async function DashboardPage() {
       )}
 
       {recent.length > 0 && (
-        <div className="mt-7 rounded-xl border border-[#D5D8DC] bg-white shadow-sm md:mt-8">
-          <div className="flex items-center justify-between border-b border-[#D5D8DC] px-5 py-3.5">
+        <div className="mt-7 grid grid-cols-1 gap-4 md:mt-8 lg:grid-cols-3">
+        <div className="rounded-xl border border-gray-200 bg-white shadow-sm lg:col-span-2">
+          <div className="flex items-center justify-between border-b border-gray-200 px-5 py-3.5">
             <div>
               <h3 className="text-base font-bold">Últimos movimentos</h3>
-              <p className="text-xs text-[#4A4A5C]">{recent.length} mais recentes</p>
+              <p className="text-xs text-gray-500">{recent.length} mais recentes</p>
             </div>
             <Link href="/movimentos" className="text-sm font-semibold text-primary-600 hover:underline">
               Ver tudo →
@@ -282,6 +327,71 @@ export default async function DashboardPage() {
               })}
             </tbody>
           </table>
+        </div>
+
+        <div className="space-y-4">
+          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold">Top Categorias</h3>
+                <p className="text-xs capitalize text-gray-500">Saídas · {anchorMonthName}</p>
+              </div>
+            </div>
+            {topCategorias.length === 0 ? (
+              <p className="text-sm text-gray-500">Sem saídas neste período.</p>
+            ) : (
+              <ul className="space-y-3">
+                {topCategorias.map((c) => {
+                  const total = Number(c.total);
+                  const pct = topCategoriasMax > 0 ? (total / topCategoriasMax) * 100 : 0;
+                  return (
+                    <li key={c.name ?? "—"}>
+                      <div className="mb-1 flex items-center justify-between gap-3">
+                        <span className="truncate text-sm font-medium text-gray-700">
+                          {c.name ?? "Sem categoria"}
+                        </span>
+                        <span className="shrink-0 text-sm font-semibold tabular-nums text-ink">
+                          {formatEUR(total)}
+                        </span>
+                      </div>
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-primary-600 to-primary-500"
+                          style={{ width: `${pct.toFixed(1)}%` }}
+                        />
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+
+          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <div className="mb-4">
+              <h3 className="text-base font-bold">Resumo do mês</h3>
+              <p className="text-xs capitalize text-gray-500">{anchorMonthName}</p>
+            </div>
+            <dl className="space-y-3 text-sm">
+              <div className="flex items-center justify-between">
+                <dt className="text-gray-500">Movimentos</dt>
+                <dd className="font-semibold tabular-nums text-ink">{Number(quickStats.count)}</dd>
+              </div>
+              <div className="flex items-center justify-between">
+                <dt className="text-gray-500">Média</dt>
+                <dd className="font-semibold tabular-nums text-ink">{formatEUR(Number(quickStats.avgValor))}</dd>
+              </div>
+              <div className="flex items-center justify-between">
+                <dt className="text-gray-500">Maior entrada</dt>
+                <dd className="font-semibold tabular-nums text-success">{formatEUR(Number(quickStats.maxEntrada))}</dd>
+              </div>
+              <div className="flex items-center justify-between">
+                <dt className="text-gray-500">Maior saída</dt>
+                <dd className="font-semibold tabular-nums text-danger">{formatEUR(Number(quickStats.maxSaida))}</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
         </div>
       )}
 

@@ -1,5 +1,4 @@
 import { CCSeal } from "./cc-seal";
-import { HeroBackdrop } from "./hero-backdrop";
 import { ShuffleNumber } from "@/components/ui/shuffle-number";
 
 export function HeroBalance({
@@ -18,17 +17,30 @@ export function HeroBalance({
   sparklineData?: number[];
 }) {
   return (
-    <HeroBackdrop>
-      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
+    <section className="relative overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-sm md:p-8">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-primary-100/60 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-16 -bottom-16 h-48 w-48 rounded-full bg-gold-500/10 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-6 left-0 w-[3px] rounded-r bg-gradient-to-b from-gold-500/0 via-gold-500/70 to-gold-500/0"
+      />
+
+      <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-gold-500 md:text-[11px]">
-            Saldo Total · <span className="text-white/85">{orgName}</span>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 md:text-[11px]">
+            Saldo Total · <span className="text-ink">{orgName}</span>
           </p>
           <div className="mt-3">
-            <ShuffleNumber value={value} delta={deltaPct} isNegative={isNegative} inverted />
+            <ShuffleNumber value={value} delta={deltaPct} isNegative={isNegative} />
           </div>
-          <p className="mt-3 text-sm text-white/70">
-            <span className="font-semibold text-white">{greeting}.</span>{" "}
+          <p className="mt-3 text-sm text-gray-600">
+            <span className="font-semibold text-ink">{greeting}.</span>{" "}
             Aqui está onde estás hoje.
           </p>
         </div>
@@ -40,7 +52,7 @@ export function HeroBalance({
           <CCSeal />
         </div>
       </div>
-    </HeroBackdrop>
+    </section>
   );
 }
 
@@ -70,23 +82,20 @@ function Sparkline({ data }: { data: number[] }) {
 
   return (
     <div className="hidden md:block" aria-hidden="true">
-      <p className="mb-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/55">
+      <p className="mb-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-gray-500">
         Últimos 6 meses
       </p>
       <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="overflow-visible">
         <defs>
           <linearGradient id="hero-spark-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#C8A951" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#C8A951" stopOpacity="0" />
+            <stop offset="0%" stopColor="#2E2C7E" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#2E2C7E" stopOpacity="0" />
           </linearGradient>
         </defs>
         <path d={areaPath} fill="url(#hero-spark-fill)" />
-        <path d={path} fill="none" stroke="#C8A951" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+        <path d={path} fill="none" stroke="#2E2C7E" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
         <circle cx={last[0]} cy={last[1]} r={3} fill="#C8A951" />
-        <circle cx={last[0]} cy={last[1]} r={5} fill="#C8A951" fillOpacity="0.35">
-          <animate attributeName="r" values="5;8;5" dur="2.4s" repeatCount="indefinite" />
-          <animate attributeName="fill-opacity" values="0.35;0.05;0.35" dur="2.4s" repeatCount="indefinite" />
-        </circle>
+        <circle cx={last[0]} cy={last[1]} r={5} fill="#C8A951" fillOpacity="0.35" />
       </svg>
     </div>
   );
