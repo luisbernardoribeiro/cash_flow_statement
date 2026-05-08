@@ -13,7 +13,17 @@ type SearchParams = Promise<{ ano?: string }>;
 export default async function FluxoMensalPage({ searchParams }: { searchParams: SearchParams }) {
   const ctx = await requireActiveOrg();
   const params = await searchParams;
-  const year = Number(params.ano) || new Date().getFullYear();
+
+  // Default: ano com mais movimentos (não o ano civil corrente, que pode estar vazio)
+  let defaultYear = new Date().getFullYear();
+  if (!params.ano) {
+    const [latestMov] = await db
+      .select({ y: sql<number>`EXTRACT(YEAR FROM MAX(${transactions.date}))::int` })
+      .from(transactions)
+      .where(eq(transactions.orgId, ctx.orgId));
+    if (latestMov?.y) defaultYear = latestMov.y;
+  }
+  const year = Number(params.ano) || defaultYear;
 
   const yearStart = `${year}-01-01`;
   const yearEnd   = `${year}-12-31`;

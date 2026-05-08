@@ -43,11 +43,16 @@ export default async function DashboardPage() {
   const saldoTotal  = Number(allTimeAgg.entradas) - Number(allTimeAgg.saidas);
   const movsMes     = Number(monthAgg.total);
 
-  // Agregação mensal dos últimos 12 meses para o gráfico
-  const yearAgo = new Date();
-  yearAgo.setMonth(yearAgo.getMonth() - 11);
-  yearAgo.setDate(1);
-  const yearAgoStr = yearAgo.toISOString().slice(0, 10);
+  // Janela dos últimos 12 meses, ancorada na data do movimento mais recente
+  // (evita gráfico vazio quando os dados não são do mês atual)
+  const [latestMov] = await db
+    .select({ d: sql<string>`MAX(${transactions.date})` })
+    .from(transactions)
+    .where(eq(transactions.orgId, ctx.orgId));
+
+  const anchor = latestMov?.d ? new Date(latestMov.d) : new Date();
+  const windowStart = new Date(anchor.getFullYear(), anchor.getMonth() - 11, 1);
+  const windowStartStr = `${windowStart.getFullYear()}-${String(windowStart.getMonth() + 1).padStart(2, "0")}-01`;
 
   const monthlyRows = await db
     .select({
@@ -56,11 +61,11 @@ export default async function DashboardPage() {
       saidas:   sql<string>`COALESCE(SUM(CASE WHEN ${transactions.type} = 'saida'   THEN ${transactions.amount} ELSE 0 END), 0)`,
     })
     .from(transactions)
-    .where(and(eq(transactions.orgId, ctx.orgId), gte(transactions.date, yearAgoStr)))
+    .where(and(eq(transactions.orgId, ctx.orgId), gte(transactions.date, windowStartStr)))
     .groupBy(sql`TO_CHAR(${transactions.date}, 'YYYY-MM')`)
     .orderBy(sql`TO_CHAR(${transactions.date}, 'YYYY-MM')`);
 
-  const monthlyData: MonthBar[] = buildMonthlySeries(monthlyRows, yearAgo);
+  const monthlyData: MonthBar[] = buildMonthlySeries(monthlyRows, windowStart);
 
   // Últimos movimentos (independente de data)
   const recent = await db
