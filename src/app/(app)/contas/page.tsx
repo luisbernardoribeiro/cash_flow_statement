@@ -48,7 +48,54 @@ export default async function ContasPage({ searchParams }: { searchParams: Searc
 
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <div className="overflow-hidden rounded-lg border border-[#D5D8DC] bg-white">
-          <table className="w-full text-sm">
+          {/* Mobile: cards */}
+          <ul className="divide-y divide-[#D5D8DC] md:hidden">
+            {rows.map((a) => {
+              const opening = Number(a.openingBalance);
+              const saldo = opening + Number(a.entradas) - Number(a.saidas);
+              return (
+                <li key={a.id} className="px-4 py-3 hover:bg-primary-50/30">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{a.name}</span>
+                        <span className="inline-block rounded-full bg-primary-50 px-2 py-0.5 text-[10px] font-semibold text-primary-700 capitalize">
+                          {a.type}
+                        </span>
+                        {a.archived && (
+                          <span className="text-[10px] uppercase tracking-wider text-[#9AA0A6]">(arquivada)</span>
+                        )}
+                      </div>
+                      <div className="mt-1 flex items-baseline gap-3">
+                        <div>
+                          <div className="text-[10px] uppercase tracking-wider text-[#4A4A5C]">Saldo atual</div>
+                          <div className={`text-lg font-bold tabular-nums ${saldo < 0 ? "text-danger" : "text-primary-600"}`}>
+                            {formatEUR(saldo)}
+                          </div>
+                        </div>
+                        <div className="text-xs text-[#4A4A5C]">
+                          Inicial {formatEUR(opening)} · {a.usage} mov{a.usage === 1 ? "" : "s"}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 flex-col items-end gap-2 text-xs">
+                      <a href={`/contas?edit=${a.id}`} className="font-semibold text-primary-600 hover:underline">Editar</a>
+                      <form action={deleteAccount}>
+                        <input type="hidden" name="id" value={a.id} />
+                        <button type="submit" className="font-semibold text-danger hover:underline">Apagar</button>
+                      </form>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+            {rows.length === 0 && (
+              <li className="px-4 py-8 text-center text-sm text-[#4A4A5C]">Sem contas.</li>
+            )}
+          </ul>
+
+          {/* Desktop: tabela */}
+          <table className="hidden w-full text-sm md:table">
             <thead className="bg-primary-50/60">
               <tr>
                 <Th>Conta</Th><Th>Tipo</Th>

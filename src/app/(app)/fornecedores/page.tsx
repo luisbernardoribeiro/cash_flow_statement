@@ -44,7 +44,37 @@ export default async function FornecedoresPage({ searchParams }: { searchParams:
 
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <div className="overflow-hidden rounded-lg border border-[#D5D8DC] bg-white">
-          <table className="w-full text-sm">
+          {/* Mobile: cards */}
+          <ul className="divide-y divide-[#D5D8DC] md:hidden">
+            {rows.map((s) => (
+              <li key={s.id} className="flex items-start justify-between gap-3 px-4 py-3 hover:bg-primary-50/30">
+                <div className="min-w-0 flex-1">
+                  <div className="font-medium">{s.name}</div>
+                  <div className="mt-0.5 text-xs text-[#4A4A5C]">
+                    {s.nif && <span className="tabular-nums">NIF {s.nif}</span>}
+                    {s.nif && s.email && " · "}
+                    {s.email && <span className="break-all">{s.email}</span>}
+                    {!s.nif && !s.email && <span>Sem dados de contacto</span>}
+                    {" · "}
+                    <span>{s.usage} mov{s.usage === 1 ? "" : "s"}</span>
+                  </div>
+                </div>
+                <div className="flex shrink-0 flex-col items-end gap-2 text-xs">
+                  <a href={`/fornecedores?edit=${s.id}`} className="font-semibold text-primary-600 hover:underline">Editar</a>
+                  <form action={deleteSupplier}>
+                    <input type="hidden" name="id" value={s.id} />
+                    <button type="submit" className="font-semibold text-danger hover:underline">Apagar</button>
+                  </form>
+                </div>
+              </li>
+            ))}
+            {rows.length === 0 && (
+              <li className="px-4 py-8 text-center text-sm text-[#4A4A5C]">Sem fornecedores.</li>
+            )}
+          </ul>
+
+          {/* Desktop: tabela */}
+          <table className="hidden w-full text-sm md:table">
             <thead className="bg-primary-50/60">
               <tr><Th>Nome</Th><Th>NIF</Th><Th>Email</Th><Th align="right">Movimentos</Th><Th /></tr>
             </thead>

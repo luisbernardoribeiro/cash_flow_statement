@@ -46,7 +46,39 @@ export default async function CategoriasPage({ searchParams }: { searchParams: S
 
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <div className="overflow-hidden rounded-lg border border-[#D5D8DC] bg-white">
-          <table className="w-full text-sm">
+          {/* Mobile: lista de cards */}
+          <ul className="divide-y divide-[#D5D8DC] md:hidden">
+            {rows.map((c) => (
+              <li key={c.id} className="flex items-start justify-between gap-3 px-4 py-3 hover:bg-primary-50/30">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">{c.name}</span>
+                    <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                      c.type === "entrada" ? "bg-success-bg text-success" : "bg-danger-bg text-danger"
+                    }`}>
+                      {c.type === "entrada" ? "Entrada" : "Saída"}
+                    </span>
+                  </div>
+                  <div className="mt-0.5 text-xs text-[#4A4A5C]">
+                    {c.group ?? "Sem grupo"} · {c.usage} mov{c.usage === 1 ? "" : "s"}
+                  </div>
+                </div>
+                <div className="flex shrink-0 flex-col items-end gap-2 text-xs">
+                  <a href={`/categorias?edit=${c.id}`} className="font-semibold text-primary-600 hover:underline">Editar</a>
+                  <form action={deleteCategory}>
+                    <input type="hidden" name="id" value={c.id} />
+                    <button type="submit" className="font-semibold text-danger hover:underline">Apagar</button>
+                  </form>
+                </div>
+              </li>
+            ))}
+            {rows.length === 0 && (
+              <li className="px-4 py-8 text-center text-sm text-[#4A4A5C]">Sem categorias.</li>
+            )}
+          </ul>
+
+          {/* Desktop: tabela */}
+          <table className="hidden w-full text-sm md:table">
             <thead className="bg-primary-50/60">
               <tr>
                 <Th>Categoria</Th>

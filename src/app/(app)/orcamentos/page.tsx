@@ -255,34 +255,24 @@ function BudgetTable({
   tone: "success" | "danger";
 }) {
   return (
-    <table className="w-full text-sm">
-      <thead className="bg-bg-soft/50">
-        <tr>
-          <Th>Categoria</Th>
-          <Th>Grupo</Th>
-          <Th align="right">Orçamento</Th>
-          <Th align="right">Realizado</Th>
-          <Th align="right">Variance</Th>
-          <Th align="right">% Usado</Th>
-        </tr>
-      </thead>
-      <tbody>
+    <>
+      {/* Mobile: lista de cards */}
+      <ul className="divide-y divide-[#D5D8DC] md:hidden">
         {cats.map((c) => {
           const planned  = budgetMap.get(c.id) ?? 0;
           const realized = realizedMap.get(c.id) ?? 0;
           const variance = planned - realized;
           const pct = planned > 0 ? Math.round((realized / planned) * 100) : 0;
-
-          // Para Saídas: passar do orçamento é vermelho (variance negativa)
-          // Para Entradas: faltar para o orçamento é vermelho (variance positiva)
           const isOver = tone === "danger" ? variance < 0 : variance > 0;
 
           return (
-            <tr key={c.id} className="border-t border-[#D5D8DC] hover:bg-primary-50/20">
-              <td className="px-4 py-2.5 font-medium">{c.name}</td>
-              <td className="px-4 py-2.5 text-[#4A4A5C]">{c.group ?? "—"}</td>
-              <td className="px-4 py-2.5">
-                <div className="flex items-center justify-end gap-1">
+            <li key={c.id} className="px-4 py-3 hover:bg-primary-50/20">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="font-medium">{c.name}</div>
+                  {c.group && <div className="text-xs text-[#4A4A5C]">{c.group}</div>}
+                </div>
+                <div className="flex shrink-0 items-center gap-1">
                   <input
                     type="text"
                     inputMode="decimal"
@@ -290,39 +280,102 @@ function BudgetTable({
                     name={`budget_${c.id}`}
                     defaultValue={planned > 0 ? planned.toFixed(2).replace(".", ",") : ""}
                     placeholder="0,00"
-                    className="w-28 rounded-md border border-[#D5D8DC] bg-white px-2 py-1 text-right text-sm tabular-nums focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-600/30"
+                    className="w-24 rounded-md border border-[#D5D8DC] bg-white px-2 py-1.5 text-right text-sm tabular-nums focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-600/30"
                   />
                   <span className="text-xs text-[#4A4A5C]">€</span>
                 </div>
-              </td>
-              <td className={`px-4 py-2.5 text-right tabular-nums ${realized > 0 ? "" : "text-[#9AA0A6]"}`}>
-                {realized > 0 ? formatEUR(realized) : "—"}
-              </td>
-              <td className={`px-4 py-2.5 text-right tabular-nums font-semibold ${
-                planned === 0 ? "text-[#9AA0A6]" :
-                isOver ? "text-danger" : "text-success"
-              }`}>
-                {planned === 0 ? "—" : (variance >= 0 ? "+ " : "- ") + formatEUR(Math.abs(variance))}
-              </td>
-              <td className="px-4 py-2.5">
-                {planned > 0 ? (
-                  <UsageBar pct={pct} tone={tone} />
-                ) : (
-                  <span className="block text-right text-[#9AA0A6]">—</span>
-                )}
-              </td>
-            </tr>
+              </div>
+              {planned > 0 && (
+                <div className="mt-2 flex items-center justify-between gap-3 text-xs">
+                  <div className="flex flex-1 items-center gap-2">
+                    <span className="text-[#4A4A5C]">Real:</span>
+                    <span className="tabular-nums">{formatEUR(realized)}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <UsageBar pct={pct} tone={tone} />
+                  </div>
+                  <span className={`tabular-nums font-semibold ${isOver ? "text-danger" : "text-success"}`}>
+                    {variance >= 0 ? "+" : "-"}{formatEUR(Math.abs(variance)).replace(" €", "")} €
+                  </span>
+                </div>
+              )}
+            </li>
           );
         })}
         {cats.length === 0 && (
-          <tr>
-            <td colSpan={6} className="px-4 py-6 text-center text-sm text-[#4A4A5C]">
-              Sem categorias deste tipo. <Link href="/categorias" className="text-primary-600 underline">Criar uma</Link>.
-            </td>
-          </tr>
+          <li className="px-4 py-6 text-center text-sm text-[#4A4A5C]">
+            Sem categorias deste tipo. <Link href="/categorias" className="text-primary-600 underline">Criar uma</Link>.
+          </li>
         )}
-      </tbody>
-    </table>
+      </ul>
+
+      {/* Desktop: tabela */}
+      <table className="hidden w-full text-sm md:table">
+        <thead className="bg-bg-soft/50">
+          <tr>
+            <Th>Categoria</Th>
+            <Th>Grupo</Th>
+            <Th align="right">Orçamento</Th>
+            <Th align="right">Realizado</Th>
+            <Th align="right">Variance</Th>
+            <Th align="right">% Usado</Th>
+          </tr>
+        </thead>
+        <tbody>
+          {cats.map((c) => {
+            const planned  = budgetMap.get(c.id) ?? 0;
+            const realized = realizedMap.get(c.id) ?? 0;
+            const variance = planned - realized;
+            const pct = planned > 0 ? Math.round((realized / planned) * 100) : 0;
+            const isOver = tone === "danger" ? variance < 0 : variance > 0;
+
+            return (
+              <tr key={c.id} className="border-t border-[#D5D8DC] hover:bg-primary-50/20">
+                <td className="px-4 py-2.5 font-medium">{c.name}</td>
+                <td className="px-4 py-2.5 text-[#4A4A5C]">{c.group ?? "—"}</td>
+                <td className="px-4 py-2.5">
+                  <div className="flex items-center justify-end gap-1">
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      pattern="[0-9.,]*"
+                      name={`budget_${c.id}`}
+                      defaultValue={planned > 0 ? planned.toFixed(2).replace(".", ",") : ""}
+                      placeholder="0,00"
+                      className="w-28 rounded-md border border-[#D5D8DC] bg-white px-2 py-1 text-right text-sm tabular-nums focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-600/30"
+                    />
+                    <span className="text-xs text-[#4A4A5C]">€</span>
+                  </div>
+                </td>
+                <td className={`px-4 py-2.5 text-right tabular-nums ${realized > 0 ? "" : "text-[#9AA0A6]"}`}>
+                  {realized > 0 ? formatEUR(realized) : "—"}
+                </td>
+                <td className={`px-4 py-2.5 text-right tabular-nums font-semibold ${
+                  planned === 0 ? "text-[#9AA0A6]" :
+                  isOver ? "text-danger" : "text-success"
+                }`}>
+                  {planned === 0 ? "—" : (variance >= 0 ? "+ " : "- ") + formatEUR(Math.abs(variance))}
+                </td>
+                <td className="px-4 py-2.5">
+                  {planned > 0 ? (
+                    <UsageBar pct={pct} tone={tone} />
+                  ) : (
+                    <span className="block text-right text-[#9AA0A6]">—</span>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+          {cats.length === 0 && (
+            <tr>
+              <td colSpan={6} className="px-4 py-6 text-center text-sm text-[#4A4A5C]">
+                Sem categorias deste tipo. <Link href="/categorias" className="text-primary-600 underline">Criar uma</Link>.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </>
   );
 }
 
