@@ -24,7 +24,7 @@ export function AlipioPhoto({
     <span className={cn("relative inline-block overflow-hidden rounded-full", className)}>
       <span
         className={cn(
-          "flex h-full w-full items-center justify-center bg-primary-600 font-extrabold leading-none text-white",
+          "flex h-full w-full items-center justify-center bg-gold-500 font-extrabold leading-none text-ink",
           initialsClass,
         )}
         aria-hidden="true"

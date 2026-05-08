@@ -14,11 +14,11 @@ export function AvatarFallback({
 
   return (
     <div
-      className="relative mx-auto overflow-hidden rounded-full ring-4 ring-primary-100 shadow-lg lg:mx-0"
+      className="relative mx-auto overflow-hidden rounded-full ring-4 ring-gold-500/30 shadow-lg lg:mx-0"
       style={{ width: size, height: size }}
       aria-label={alt}
     >
-      <div className="flex h-full w-full items-center justify-center bg-primary-600 font-extrabold text-white" style={{ fontSize: size * 0.34 }}>
+      <div className="flex h-full w-full items-center justify-center bg-gold-500 font-extrabold text-ink" style={{ fontSize: size * 0.34 }}>
         {initials}
       </div>
       {!error && (
