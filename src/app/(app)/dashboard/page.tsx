@@ -3,7 +3,7 @@ import { requireActiveOrg } from "@/lib/auth";
 import { db } from "@/lib/db/client";
 import { transactions, categories, accounts } from "@/lib/db/schema";
 import { and, desc, eq, gte, sql } from "drizzle-orm";
-import { ArrowDownToLine, ArrowUpFromLine, Wallet } from "lucide-react";
+import { ArrowDownToLine, ArrowUpFromLine, TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import { formatEUR, formatDate } from "@/lib/utils";
 import { MonthlyBarChart, type MonthBar } from "@/components/monthly-chart";
 import { HeroBalance } from "@/components/dashboard/hero-balance";
@@ -122,12 +122,14 @@ export default async function DashboardPage() {
 
   return (
     <div className="px-4 py-5 md:px-10 md:py-7">
-      <div className="mb-5 flex items-start justify-between gap-3">
-        <p className="text-sm text-[#4A4A5C]">
-          Início <span className="mx-2">/</span>
-          <strong className="text-ink">Dashboard</strong>
-        </p>
-        <a href="/movimentos/novo" className="btn btn-primary">+ Novo Movimento</a>
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between md:mb-8">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-extrabold tracking-tight text-ink md:text-3xl">Dashboard</h1>
+          <p className="mt-1 text-sm text-[#4A4A5C]">
+            Visão geral da tua tesouraria · <span className="capitalize">{monthName}</span>
+          </p>
+        </div>
+        <a href="/movimentos/novo" className="btn btn-primary self-start sm:self-auto">+ Novo Movimento</a>
       </div>
 
       <HeroBalance
@@ -136,7 +138,6 @@ export default async function DashboardPage() {
         deltaPct={saldoDeltaPct}
         greeting={greeting}
         orgName={ctx.orgName}
-        monthName={monthName}
       />
 
       {/* Divider dourado entre hero e KPIs mensais */}
@@ -178,7 +179,7 @@ export default async function DashboardPage() {
       {recent.length === 0 && <EmptyState />}
 
       {recent.length > 0 && hasAnyChartData && (
-        <div className="mt-7 rounded-lg border border-[#D5D8DC] bg-white p-5 md:mt-8">
+        <div className="mt-7 rounded-xl border border-[#D5D8DC] bg-white p-5 shadow-sm md:mt-8">
           <div className="mb-3 flex items-start justify-between">
             <div>
               <h3 className="text-base font-bold">Entradas vs Saídas</h3>
@@ -192,7 +193,7 @@ export default async function DashboardPage() {
       )}
 
       {recent.length > 0 && (
-        <div className="mt-7 rounded-lg border border-[#D5D8DC] bg-white md:mt-8">
+        <div className="mt-7 rounded-xl border border-[#D5D8DC] bg-white shadow-sm md:mt-8">
           <div className="flex items-center justify-between border-b border-[#D5D8DC] px-5 py-3.5">
             <div>
               <h3 className="text-base font-bold">Últimos movimentos</h3>
@@ -206,29 +207,25 @@ export default async function DashboardPage() {
           <ul className="divide-y divide-[#D5D8DC] md:hidden">
             {recent.map((r) => {
               const isIn = r.type === "entrada";
+              const RowIcon = isIn ? TrendingUp : TrendingDown;
               return (
                 <li key={r.id}>
-                  <Link href={`/movimentos/${r.id}`} className="block px-4 py-3 hover:bg-primary-50/20">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                            isIn ? "bg-success-bg text-success" : "bg-danger-bg text-danger"
-                          }`}>
-                            {isIn ? "Entrada" : "Saída"}
-                          </span>
-                          <span className="text-xs text-[#4A4A5C] whitespace-nowrap">{formatDate(r.date)}</span>
-                        </div>
-                        <div className="mt-1 line-clamp-2 font-medium leading-snug">{r.description}</div>
-                        <div className="mt-0.5 truncate text-xs text-[#4A4A5C]">
-                          {r.categoryName ?? "—"}{r.accountName && <> · {r.accountName}</>}
-                        </div>
+                  <Link href={`/movimentos/${r.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-primary-50/20">
+                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
+                      isIn ? "bg-success-bg" : "bg-danger-bg"
+                    }`}>
+                      <RowIcon className={`h-5 w-5 ${isIn ? "text-success" : "text-danger"}`} aria-hidden="true" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="line-clamp-1 font-medium leading-snug">{r.description}</div>
+                      <div className="mt-0.5 truncate text-xs text-[#4A4A5C]">
+                        {r.categoryName ?? "—"}{r.accountName && <> · {r.accountName}</>} · {formatDate(r.date)}
                       </div>
-                      <div className={`shrink-0 text-right font-bold tabular-nums whitespace-nowrap ${
-                        isIn ? "text-success" : "text-danger"
-                      }`}>
-                        {isIn ? "+ " : "- "}{formatEUR(Number(r.amount))}
-                      </div>
+                    </div>
+                    <div className={`shrink-0 text-right font-bold tabular-nums whitespace-nowrap ${
+                      isIn ? "text-success" : "text-danger"
+                    }`}>
+                      {isIn ? "+ " : "- "}{formatEUR(Number(r.amount))}
                     </div>
                   </Link>
                 </li>
@@ -240,31 +237,31 @@ export default async function DashboardPage() {
           <table className="hidden w-full text-sm md:table">
             <thead className="bg-primary-50/40">
               <tr>
-                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Data</th>
-                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Tipo</th>
-                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Descrição</th>
+                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]" colSpan={2}>Movimento</th>
                 <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Categoria</th>
                 <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Conta</th>
+                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Data</th>
                 <th className="px-5 py-2.5 text-right text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Valor</th>
               </tr>
             </thead>
             <tbody>
               {recent.map((r) => {
                 const isIn = r.type === "entrada";
+                const RowIcon = isIn ? TrendingUp : TrendingDown;
                 return (
                   <tr key={r.id} className="border-t border-[#D5D8DC] hover:bg-primary-50/20">
-                    <td className="px-5 py-3 whitespace-nowrap">{formatDate(r.date)}</td>
-                    <td className="px-5 py-3">
-                      <span className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
-                        isIn ? "bg-success-bg text-success" : "bg-danger-bg text-danger"
+                    <td className="py-3 pl-5 pr-2 align-middle">
+                      <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${
+                        isIn ? "bg-success-bg" : "bg-danger-bg"
                       }`}>
-                        {isIn ? "Entrada" : "Saída"}
-                      </span>
+                        <RowIcon className={`h-4 w-4 ${isIn ? "text-success" : "text-danger"}`} aria-hidden="true" />
+                      </div>
                     </td>
-                    <td className="px-5 py-3">{r.description}</td>
-                    <td className="px-5 py-3 text-[#4A4A5C]">{r.categoryName ?? "—"}</td>
-                    <td className="px-5 py-3 text-[#4A4A5C]">{r.accountName ?? "—"}</td>
-                    <td className={`px-5 py-3 text-right font-bold tabular-nums whitespace-nowrap ${
+                    <td className="py-3 pr-5 align-middle">{r.description}</td>
+                    <td className="px-5 py-3 align-middle text-[#4A4A5C]">{r.categoryName ?? "—"}</td>
+                    <td className="px-5 py-3 align-middle text-[#4A4A5C]">{r.accountName ?? "—"}</td>
+                    <td className="px-5 py-3 align-middle whitespace-nowrap text-[#4A4A5C]">{formatDate(r.date)}</td>
+                    <td className={`px-5 py-3 align-middle text-right font-bold tabular-nums whitespace-nowrap ${
                       isIn ? "text-success" : "text-danger"
                     }`}>
                       {isIn ? "+ " : "- "}{formatEUR(Number(r.amount))}

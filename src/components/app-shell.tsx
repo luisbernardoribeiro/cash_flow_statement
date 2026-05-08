@@ -13,16 +13,41 @@ type NavItem = {
   count?: number;
 };
 
-const NAV: NavItem[] = [
-  { href: "/dashboard",     label: "Dashboard",     icon: "📊" },
-  { href: "/movimentos",    label: "Movimentos",    icon: "€" },
-  { href: "/fluxo-mensal",  label: "Fluxo Mensal",  icon: "📅" },
-  { href: "/orcamentos",    label: "Orçamentos",    icon: "🎯" },
-  { href: "/contas",        label: "Contas",        icon: "🏦" },
-  { href: "/categorias",    label: "Categorias",    icon: "🏷️" },
-  { href: "/fornecedores",  label: "Fornecedores",  icon: "🤝" },
-  { href: "/relatorios",    label: "Relatórios",    icon: "📄" },
-  { href: "/configuracao",  label: "Configuração",  icon: "⚙️" },
+type NavSection = {
+  label: string;
+  items: NavItem[];
+};
+
+const NAV_SECTIONS: NavSection[] = [
+  {
+    label: "Operação",
+    items: [
+      { href: "/dashboard",     label: "Dashboard",     icon: "📊" },
+      { href: "/movimentos",    label: "Movimentos",    icon: "€" },
+      { href: "/fluxo-mensal",  label: "Fluxo Mensal",  icon: "📅" },
+      { href: "/orcamentos",    label: "Orçamentos",    icon: "🎯" },
+    ],
+  },
+  {
+    label: "Cadastros",
+    items: [
+      { href: "/contas",        label: "Contas",        icon: "🏦" },
+      { href: "/categorias",    label: "Categorias",    icon: "🏷️" },
+      { href: "/fornecedores",  label: "Fornecedores",  icon: "🤝" },
+    ],
+  },
+  {
+    label: "Análise",
+    items: [
+      { href: "/relatorios",    label: "Relatórios",    icon: "📄" },
+    ],
+  },
+  {
+    label: "Conta",
+    items: [
+      { href: "/configuracao",  label: "Configuração",  icon: "⚙️" },
+    ],
+  },
 ];
 
 export function AppShell({
@@ -104,40 +129,55 @@ export function AppShell({
           </div>
 
           <nav className="flex-1 overflow-y-auto overflow-x-hidden">
-            {NAV.map((item) => {
-              const active = pathname.startsWith(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  title={collapsed ? item.label : undefined}
-                  className={cn(
-                    "relative mb-1 flex items-center rounded-md text-sm font-medium transition-colors",
-                    collapsed
-                      ? "md:h-10 md:w-10 md:justify-center md:p-0 md:mx-auto"
-                      : "gap-3 px-3.5 py-2.5",
-                    active
-                      ? "bg-white/15 text-white"
-                      : "text-white/75 hover:bg-white/10 hover:text-white",
-                  )}
-                >
-                  <span className={cn("text-center opacity-90", collapsed ? "" : "w-[18px]")}>
-                    {item.icon}
-                  </span>
-                  {!collapsed && <span className="truncate">{item.label}</span>}
-                  {typeof item.count === "number" && item.count > 0 && (
-                    <span
+            {NAV_SECTIONS.map((section, sIdx) => (
+              <div
+                key={section.label}
+                className={cn(
+                  sIdx > 0 && !collapsed && "mt-4 border-t border-white/10 pt-3",
+                  sIdx > 0 && collapsed && "md:mt-2 md:border-t md:border-white/10 md:pt-2",
+                )}
+              >
+                {!collapsed && (
+                  <div className="mb-1 px-3.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/45">
+                    {section.label}
+                  </div>
+                )}
+                {section.items.map((item) => {
+                  const active = pathname.startsWith(item.href);
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      title={collapsed ? item.label : undefined}
                       className={cn(
-                        "ml-auto inline-flex items-center justify-center rounded-full bg-gold-500 px-1.5 text-[10px] font-bold leading-5 text-ink",
-                        collapsed && "md:absolute md:-right-1 md:-top-1 md:ml-0 md:h-4 md:min-w-4 md:px-1",
+                        "relative mb-1 flex items-center rounded-md text-sm font-medium transition-colors",
+                        collapsed
+                          ? "md:h-10 md:w-10 md:justify-center md:p-0 md:mx-auto"
+                          : "gap-3 px-3.5 py-2.5",
+                        active
+                          ? "bg-white/15 text-white"
+                          : "text-white/75 hover:bg-white/10 hover:text-white",
                       )}
                     >
-                      {item.count > 99 ? "99+" : item.count}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
+                      <span className={cn("text-center opacity-90", collapsed ? "" : "w-[18px]")}>
+                        {item.icon}
+                      </span>
+                      {!collapsed && <span className="truncate">{item.label}</span>}
+                      {typeof item.count === "number" && item.count > 0 && (
+                        <span
+                          className={cn(
+                            "ml-auto inline-flex items-center justify-center rounded-full bg-gold-500 px-1.5 text-[10px] font-bold leading-5 text-ink",
+                            collapsed && "md:absolute md:-right-1 md:-top-1 md:ml-0 md:h-4 md:min-w-4 md:px-1",
+                          )}
+                        >
+                          {item.count > 99 ? "99+" : item.count}
+                        </span>
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
+            ))}
           </nav>
 
           {!collapsed && (

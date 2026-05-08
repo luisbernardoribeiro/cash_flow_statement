@@ -7,14 +7,12 @@ export function HeroBalance({
   deltaPct,
   greeting,
   orgName,
-  monthName,
 }: {
   value: number;
   isNegative: boolean;
   deltaPct: number | null;
   greeting: string;
   orgName: string;
-  monthName: string;
 }) {
   return (
     <section className="relative overflow-hidden rounded-2xl border border-primary-100 bg-gradient-to-br from-primary-50/60 via-white to-white p-6 shadow-sm md:p-8">
@@ -37,7 +35,7 @@ export function HeroBalance({
           </div>
           <p className="mt-3 text-sm text-[#4A4A5C]">
             <span className="font-semibold text-ink">{greeting}.</span>{" "}
-            Vista geral · <span className="capitalize">{monthName}</span>
+            Aqui está onde estás hoje.
           </p>
         </div>
 
