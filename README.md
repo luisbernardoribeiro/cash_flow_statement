@@ -1,6 +1,6 @@
-# MAPA Tesouraria — Next.js App
+# MAPA Fluxos Tesouraria — Next.js App
 
-Plataforma SaaS de controlo de tesouraria para PMEs portuguesas, sob a marca **GI Contabilidade & Consultoria**.
+Plataforma SaaS de controlo de tesouraria para PMEs portuguesas, sob a marca **GI ADVISE — Contabilidade Consultoria**.
 
 > Desenvolvido por **Alípio Monteiro** · Contabilista Certificado nº 32897
 

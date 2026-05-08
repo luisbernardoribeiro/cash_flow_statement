@@ -1,8 +1,8 @@
 {
-  "name": "mapa-tesouraria",
+  "name": "mapa-fluxos-tesouraria",
   "version": "0.1.0",
   "private": true,
-  "description": "MAPA Tesouraria — by GI Contabilidade & Consultoria",
+  "description": "MAPA Fluxos Tesouraria — by GI ADVISE — Contabilidade Consultoria",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

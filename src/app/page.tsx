@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AvatarFallback } from "@/components/avatar-fallback";
 
-const BRAND = process.env.NEXT_PUBLIC_BRAND_NAME ?? "MAPA Tesouraria";
+const BRAND = process.env.NEXT_PUBLIC_BRAND_NAME ?? "MAPA Fluxos Tesouraria";
 const CC_NUMBER = process.env.NEXT_PUBLIC_CC_NUMBER ?? "32897";
 
 export default function HomePage() {
@@ -50,7 +50,7 @@ export default function HomePage() {
             <div className="mt-8 flex flex-wrap items-center gap-6 text-sm text-[#4A4A5C]">
               <span>✓ <strong className="text-ink">Sem cartão</strong> nos primeiros 14 dias</span>
               <span>✓ Cumpre <strong className="text-ink">RGPD</strong> · dados em servidor UE</span>
-              <span>✓ Suporte da <strong className="text-ink">GI Contabilidade</strong></span>
+              <span>✓ Suporte da <strong className="text-ink">GI ADVISE</strong></span>
             </div>
           </div>
 
@@ -92,7 +92,7 @@ export default function HomePage() {
       <footer className="bg-ink py-12 text-white/85">
         <div className="mx-auto max-w-7xl px-6">
           <p className="text-sm">
-            <strong className="text-white">{BRAND}</strong> — by GI Contabilidade & Consultoria · Viseu
+            <strong className="text-white">{BRAND}</strong> — by GI ADVISE — Contabilidade Consultoria · Viseu
           </p>
           <p className="mt-2 text-xs text-white/55">
             Alípio Monteiro · CC nº {CC_NUMBER} · Auditor Interno IPAI nº 3330 · Member IIA
@@ -111,10 +111,10 @@ function Logo() {
       </span>
       <span className="flex flex-col leading-none">
         <span className="text-lg font-extrabold tracking-tight text-primary-600">
-          MAPA <span className="font-normal italic text-primary-400">Tesouraria</span>
+          MAPA <span className="font-normal italic text-primary-400">Fluxos Tesouraria</span>
         </span>
         <span className="mt-1 text-[10px] font-medium tracking-[2px] text-[#4A4A5C]">
-          BY GI CONTABILIDADE
+          BY GI ADVISE
         </span>
       </span>
     </Link>
