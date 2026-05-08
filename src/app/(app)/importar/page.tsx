@@ -33,7 +33,7 @@ export default async function ImportarPage({ searchParams }: { searchParams: Sea
                 </div>
               )}
 
-              <form action={importFromXlsx} encType="multipart/form-data" className="space-y-5">
+              <form action={importFromXlsx} className="space-y-5">
                 <Field label="Ficheiro Excel (.xlsx)" required>
                   <input type="file" name="file" accept=".xlsx,.xlsm,.xls" required
                     className="block w-full rounded-md border border-[#D5D8DC] bg-white px-4 py-2.5 text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary-600 file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-primary-700" />

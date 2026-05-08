@@ -29,19 +29,35 @@ function normalizeKey(k: string): string {
     .trim();
 }
 
+// Converte Excel serial date number → "yyyy-mm-dd"
+// Excel epoch = 1900-01-01 mas tem bug do ano 1900 ser tratado como bissexto.
+// Para serials >= 60 a fórmula equivalente é: 1899-12-30 UTC + N dias.
+function excelSerialToISO(n: number): string | null {
+  if (!isFinite(n) || n < 1 || n > 100000) return null;
+  const ms = Math.round(n * 86400000) + Date.UTC(1899, 11, 30);
+  const d = new Date(ms);
+  if (isNaN(d.getTime())) return null;
+  const y = d.getUTCFullYear();
+  if (y < 1900 || y > 2200) return null;
+  return `${y}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+}
+
 function parseExcelDate(v: unknown): string | null {
   if (v == null || v === "") return null;
-  // Excel serial number
+
+  // Number (Excel serial, ex: 45658 = 2025-01-01)
   if (typeof v === "number") {
-    const date = XLSX.SSF.parse_date_code(v);
-    if (date && date.y > 1900) {
-      return `${date.y}-${String(date.m).padStart(2, "0")}-${String(date.d).padStart(2, "0")}`;
-    }
+    const r = excelSerialToISO(v);
+    if (r) return r;
   }
-  // ISO already
+
   const s = String(v).trim();
+  if (!s) return null;
+
+  // ISO yyyy-mm-dd
   if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
-  // dd/mm/yyyy
+
+  // dd/mm/yyyy or dd-mm-yyyy
   const m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/);
   if (m) {
     const dd = m[1].padStart(2, "0");
@@ -50,9 +66,18 @@ function parseExcelDate(v: unknown): string | null {
     if (yy.length === 2) yy = "20" + yy;
     return `${yy}-${mm}-${dd}`;
   }
-  // Try Date.parse
+
+  // Numeric string that looks like Excel serial (4-6 digits)
+  if (/^\d{4,6}(\.\d+)?$/.test(s)) {
+    const r = excelSerialToISO(Number(s));
+    if (r) return r;
+  }
+
+  // Last resort: Date.parse
   const d = new Date(s);
-  if (!isNaN(d.getTime())) return d.toISOString().slice(0, 10);
+  if (!isNaN(d.getTime()) && d.getFullYear() > 1900 && d.getFullYear() < 2200) {
+    return d.toISOString().slice(0, 10);
+  }
   return null;
 }
 
@@ -104,21 +129,49 @@ export async function importFromXlsx(formData: FormData) {
   }
 
   const sheet = workbook.Sheets[sheetName];
-  const rawRows: RowIn[] = XLSX.utils.sheet_to_json<RowIn>(sheet, { defval: null });
 
-  if (rawRows.length === 0) {
+  // Read as 2D array to find the real header row (template tem título merged nas linhas 1-2)
+  const matrix: unknown[][] = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null });
+
+  if (matrix.length === 0) {
     redirect(`/importar?error=1&msg=${encodeURIComponent("A folha está vazia.")}`);
   }
 
-  // Normalize keys
-  const rows = rawRows.map((row) => {
-    const normalized: Record<string, unknown> = {};
-    for (const [k, v] of Object.entries(row)) {
-      const mapped = HEADER_MAP[normalizeKey(k)];
-      if (mapped) normalized[mapped] = v;
+  // Encontrar a linha que contém os cabeçalhos esperados (Data, Tipo, etc.)
+  let headerRowIdx = -1;
+  let mappedHeaders: (string | null)[] = [];
+  for (let i = 0; i < Math.min(matrix.length, 20); i++) {
+    const row = matrix[i] || [];
+    const candidates = row.map((cell) => HEADER_MAP[normalizeKey(String(cell ?? ""))] ?? null);
+    const hits = candidates.filter(Boolean).length;
+    // Considera-se header se tem pelo menos 4 colunas reconhecidas
+    if (hits >= 4) {
+      headerRowIdx = i;
+      mappedHeaders = candidates;
+      break;
     }
-    return normalized;
-  });
+  }
+
+  if (headerRowIdx === -1) {
+    redirect(`/importar?error=1&msg=${encodeURIComponent("Não encontrei a linha de cabeçalho (Data, Tipo, Descrição, Valor…). Verifica que o ficheiro tem essas colunas.")}`);
+  }
+
+  // Construir rows a partir da linha após o header
+  const rows: Record<string, unknown>[] = [];
+  for (let i = headerRowIdx + 1; i < matrix.length; i++) {
+    const arr = matrix[i] || [];
+    if (arr.every((c) => c == null || String(c).trim() === "")) continue; // skip vazias
+    const obj: Record<string, unknown> = {};
+    for (let j = 0; j < mappedHeaders.length; j++) {
+      const key = mappedHeaders[j];
+      if (key) obj[key] = arr[j];
+    }
+    rows.push(obj);
+  }
+
+  if (rows.length === 0) {
+    redirect(`/importar?error=1&msg=${encodeURIComponent("Cabeçalho encontrado, mas não há linhas de dados.")}`);
+  }
 
   // Pre-fetch existing master data
   const [existingCats, existingSups, existingAccs] = await Promise.all([
@@ -220,18 +273,28 @@ export async function importFromXlsx(formData: FormData) {
   }
 
   // Re-link transactions to newly created categories/suppliers
-  for (let i = 0; i < toInsert.length; i++) {
-    if (!toInsert[i].categoryId && rawRows[i]) {
-      const orig = rows[i];
-      if (orig.category) {
-        const key = normalizeKey(String(orig.category));
-        if (catMap.has(key)) toInsert[i].categoryId = catMap.get(key)!;
-      }
-      if (orig.supplier && !toInsert[i].supplierId) {
-        const key = normalizeKey(String(orig.supplier));
-        if (supMap.has(key)) toInsert[i].supplierId = supMap.get(key)!;
-      }
+  // Nota: rows[] e toInsert[] não são 1:1 (rows com erros não geram inserts).
+  // Mantemos um mapa pelo conjunto (description+date) é frágil; melhor: re-percorrer rows
+  // e refazer só as ligações. Mas como toInsert preserva ordem dos válidos, basta
+  // percorrer rows válidas pela mesma ordem.
+  let validIdx = 0;
+  for (let i = 0; i < rows.length && validIdx < toInsert.length; i++) {
+    const r = rows[i];
+    const date = parseExcelDate(r.date);
+    const type = parseType(r.type);
+    const description = String(r.description ?? "").trim();
+    const amount = parseAmount(r.amount);
+    if (!date || !type || !description || amount == null || amount === 0) continue;
+
+    if (!toInsert[validIdx].categoryId && r.category) {
+      const key = normalizeKey(String(r.category));
+      if (catMap.has(key)) toInsert[validIdx].categoryId = catMap.get(key)!;
     }
+    if (!toInsert[validIdx].supplierId && r.supplier) {
+      const key = normalizeKey(String(r.supplier));
+      if (supMap.has(key)) toInsert[validIdx].supplierId = supMap.get(key)!;
+    }
+    validIdx++;
   }
 
   if (toInsert.length === 0) {
