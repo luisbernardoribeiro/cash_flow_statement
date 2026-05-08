@@ -100,7 +100,40 @@ export default async function MovimentosPage({ searchParams }: { searchParams: S
       ) : (
         <>
           <div className="overflow-hidden rounded-lg border border-[#D5D8DC] bg-white">
-            <table className="w-full text-sm">
+            {/* Mobile: lista de cards */}
+            <ul className="divide-y divide-[#D5D8DC] md:hidden">
+              {rows.map((r) => {
+                const isIn = r.type === "entrada";
+                return (
+                  <li key={r.id}>
+                    <Link href={`/movimentos/${r.id}`} className="block px-4 py-3 hover:bg-primary-50/30">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <Badge tone={isIn ? "success" : "danger"}>{isIn ? "Entrada" : "Saída"}</Badge>
+                            <span className="text-xs text-[#4A4A5C] whitespace-nowrap">{formatDate(r.date)}</span>
+                          </div>
+                          <div className="mt-1 line-clamp-2 font-medium leading-snug">{r.description}</div>
+                          <div className="mt-1 truncate text-xs text-[#4A4A5C]">
+                            {r.categoryName ?? "—"}
+                            {r.supplierName && <> · {r.supplierName}</>}
+                            {r.accountName && <> · {r.accountName}</>}
+                          </div>
+                        </div>
+                        <div className={`shrink-0 text-right font-bold tabular-nums whitespace-nowrap ${
+                          isIn ? "text-success" : "text-danger"
+                        }`}>
+                          {isIn ? "+ " : "- "}{formatEUR(Number(r.amount))}
+                        </div>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+
+            {/* Desktop: tabela */}
+            <table className="hidden w-full text-sm md:table">
               <thead className="bg-primary-50/60">
                 <tr>
                   <Th>Data</Th>

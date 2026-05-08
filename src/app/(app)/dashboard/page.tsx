@@ -137,7 +137,42 @@ export default async function DashboardPage() {
               Ver tudo →
             </Link>
           </div>
-          <table className="w-full text-sm">
+          {/* Mobile: cards */}
+          <ul className="divide-y divide-[#D5D8DC] md:hidden">
+            {recent.map((r) => {
+              const isIn = r.type === "entrada";
+              return (
+                <li key={r.id}>
+                  <Link href={`/movimentos/${r.id}`} className="block px-4 py-3 hover:bg-primary-50/20">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                            isIn ? "bg-success-bg text-success" : "bg-danger-bg text-danger"
+                          }`}>
+                            {isIn ? "Entrada" : "Saída"}
+                          </span>
+                          <span className="text-xs text-[#4A4A5C] whitespace-nowrap">{formatDate(r.date)}</span>
+                        </div>
+                        <div className="mt-1 line-clamp-2 font-medium leading-snug">{r.description}</div>
+                        <div className="mt-0.5 truncate text-xs text-[#4A4A5C]">
+                          {r.categoryName ?? "—"}{r.accountName && <> · {r.accountName}</>}
+                        </div>
+                      </div>
+                      <div className={`shrink-0 text-right font-bold tabular-nums whitespace-nowrap ${
+                        isIn ? "text-success" : "text-danger"
+                      }`}>
+                        {isIn ? "+ " : "- "}{formatEUR(Number(r.amount))}
+                      </div>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          {/* Desktop: tabela */}
+          <table className="hidden w-full text-sm md:table">
             <thead className="bg-primary-50/40">
               <tr>
                 <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Data</th>
