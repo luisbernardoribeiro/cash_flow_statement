@@ -90,13 +90,22 @@ export default function HomePage() {
       </section>
 
       <footer className="bg-ink py-12 text-white/85">
-        <div className="mx-auto max-w-7xl px-6">
-          <p className="text-sm">
-            <strong className="text-white">{BRAND}</strong> — by GI ADVISE — Contabilidade Consultoria · Viseu
-          </p>
-          <p className="mt-2 text-xs text-white/55">
-            Alípio Monteiro · CC nº {CC_NUMBER} · Auditor Interno IPAI nº 3330 · Member IIA
-          </p>
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-sm">
+              <strong className="text-white">{BRAND}</strong> — by GI ADVISE — Contabilidade Consultoria · Viseu
+            </p>
+            <p className="mt-2 text-xs text-white/55">
+              Alípio Monteiro · CC nº {CC_NUMBER} · Auditor Interno IPAI nº 3330 · Member IIA
+            </p>
+          </div>
+          {/* GI ADVISE logo (versão branca via filter brightness invert) */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/gi-logo.svg"
+            alt="GI ADVISE — Contabilidade Consultoria"
+            className="h-12 w-auto opacity-80 [filter:brightness(0)_invert(1)]"
+          />
         </div>
       </footer>
     </main>
@@ -105,10 +114,10 @@ export default function HomePage() {
 
 function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-3">
-      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-600 font-extrabold text-white">
-        M
-      </span>
+    <Link href="/" className="flex items-center gap-3" aria-label="MAPA Tesouraria — by GI ADVISE">
+      {/* Mark (símbolo) — sempre visível */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/brand/logo-mapa-mark.svg" alt="" className="h-11 w-11" />
       <span className="flex flex-col leading-none">
         <span className="text-lg font-extrabold tracking-tight text-primary-600">
           MAPA <span className="font-normal italic text-primary-400">Fluxos Tesouraria</span>

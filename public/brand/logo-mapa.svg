@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 80" role="img" aria-label="MAPA Fluxos Tesouraria by GI ADVISE">
+  <!-- Symbol: stylized 'M' + flow line evoking cash flow -->
+  <g transform="translate(0, 14)">
+    <rect x="0" y="0" width="52" height="52" rx="12" fill="#2E2C7E"/>
+    <!-- M letter -->
+    <path d="M 12 38 L 12 16 L 18 16 L 26 28 L 34 16 L 40 16 L 40 38 L 35 38 L 35 24 L 28 34 L 24 34 L 17 24 L 17 38 Z" fill="#FFFFFF"/>
+    <!-- flow line under -->
+    <path d="M 10 44 Q 18 41 26 44 T 42 44" stroke="#C8A951" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+  <!-- Wordmark -->
+  <g transform="translate(68, 0)">
+    <text x="0" y="38" font-family="Inter, Helvetica Neue, sans-serif" font-weight="800" font-size="32" fill="#2E2C7E" letter-spacing="-0.5">MAPA</text>
+    <text x="106" y="38" font-family="Inter, Helvetica Neue, sans-serif" font-weight="400" font-size="22" fill="#5856A8" font-style="italic">Fluxos Tesouraria</text>
+    <text x="0" y="62" font-family="Inter, Helvetica Neue, sans-serif" font-weight="500" font-size="11" fill="#4A4A5C" letter-spacing="2">BY GI ADVISE — CONTABILIDADE CONSULTORIA</text>
+  </g>
+</svg>
