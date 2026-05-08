@@ -10,9 +10,15 @@ import { deleteTransaction } from "../actions";
 
 export const metadata = { title: "Detalhe do Movimento" };
 
-export default async function MovimentoDetalhePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function MovimentoDetalhePage({
+  params, searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ updated?: string }>;
+}) {
   const ctx = await requireActiveOrg();
   const { id } = await params;
+  const { updated } = await searchParams;
 
   const [row] = await db
     .select({
@@ -50,6 +56,12 @@ export default async function MovimentoDetalhePage({ params }: { params: Promise
         ]}
       />
 
+      {updated && (
+        <div className="mb-4 rounded-md border border-success/30 bg-success-bg px-4 py-2.5 text-sm font-medium text-success">
+          ✓ Movimento atualizado com sucesso.
+        </div>
+      )}
+
       <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
         <div className="rounded-2xl border border-[#D5D8DC] bg-white p-7 shadow-sm">
           <div className="mb-6 flex items-start justify-between gap-4">
@@ -83,15 +95,20 @@ export default async function MovimentoDetalhePage({ params }: { params: Promise
 
           <div className="mt-7 flex justify-between gap-3 border-t border-[#D5D8DC] pt-5">
             <Link href="/movimentos" className="btn btn-ghost">← Voltar</Link>
-            <form action={deleteTransaction}>
-              <input type="hidden" name="id" value={row.id} />
-              <button
-                type="submit"
-                className="rounded-md border border-danger/30 bg-danger-bg px-5 py-2.5 text-sm font-semibold text-danger hover:bg-danger hover:text-white transition-colors"
-              >
-                Apagar movimento
-              </button>
-            </form>
+            <div className="flex gap-3">
+              <Link href={`/movimentos/${row.id}/editar`} className="btn btn-primary">
+                ✎ Editar
+              </Link>
+              <form action={deleteTransaction}>
+                <input type="hidden" name="id" value={row.id} />
+                <button
+                  type="submit"
+                  className="rounded-md border border-danger/30 bg-danger-bg px-5 py-2.5 text-sm font-semibold text-danger hover:bg-danger hover:text-white transition-colors"
+                >
+                  Apagar
+                </button>
+              </form>
+            </div>
           </div>
         </div>
 

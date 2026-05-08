@@ -58,6 +58,47 @@ export async function createTransaction(formData: FormData) {
   redirect("/movimentos");
 }
 
+export async function updateTransaction(formData: FormData) {
+  const ctx = await requireActiveOrg();
+  const id = String(formData.get("id") ?? "");
+
+  const raw = {
+    date: String(formData.get("date") ?? ""),
+    type: String(formData.get("type") ?? ""),
+    description: String(formData.get("description") ?? "").trim(),
+    amount: String(formData.get("amount") ?? ""),
+    categoryId: nullableUuid(formData.get("categoryId")),
+    supplierId: nullableUuid(formData.get("supplierId")),
+    accountId: String(formData.get("accountId") ?? ""),
+    notes: nullableString(formData.get("notes")),
+  };
+
+  const parsed = createSchema.safeParse(raw);
+  if (!id || !parsed.success) {
+    redirect(`/movimentos/${id}/editar?error=invalid`);
+  }
+
+  const amount = Number(parsed.data.amount.replace(",", "."));
+
+  await db.update(transactions).set({
+    date: parsed.data.date,
+    type: parsed.data.type,
+    description: parsed.data.description,
+    amount: String(amount),
+    categoryId: parsed.data.categoryId,
+    supplierId: parsed.data.supplierId,
+    accountId: parsed.data.accountId,
+    notes: parsed.data.notes,
+    updatedAt: new Date(),
+  }).where(and(eq(transactions.id, id), eq(transactions.orgId, ctx.orgId)));
+
+  revalidatePath("/movimentos");
+  revalidatePath(`/movimentos/${id}`);
+  revalidatePath("/dashboard");
+  revalidatePath("/fluxo-mensal");
+  redirect(`/movimentos/${id}?updated=1`);
+}
+
 export async function deleteTransaction(formData: FormData) {
   const ctx = await requireActiveOrg();
   const id = String(formData.get("id") ?? "");
