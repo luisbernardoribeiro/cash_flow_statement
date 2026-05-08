@@ -59,3 +59,30 @@ function nullableStr(v: FormDataEntryValue | null): string | null {
   const s = String(v ?? "").trim();
   return s ? s : null;
 }
+
+/**
+ * Criação inline a partir de comboboxes em outros formulários.
+ * Devolve { id, label, group } pronto para inserir no combobox sem refresh.
+ */
+export async function createCategoryInline({
+  name, type,
+}: {
+  name: string;
+  type: "entrada" | "saida";
+}): Promise<{ id: string; label: string; group: string } | null> {
+  const ctx = await requireActiveOrg();
+  const trimmed = name.trim();
+  if (!trimmed || (type !== "entrada" && type !== "saida")) return null;
+
+  const [created] = await db.insert(categories).values({
+    orgId: ctx.orgId,
+    name: trimmed,
+    type,
+    group: "Personalizado",
+  }).returning({ id: categories.id, name: categories.name });
+
+  // Não revalidamos /movimentos/novo aqui — o combobox atualiza-se sozinho client-side
+  revalidatePath("/categorias");
+
+  return { id: created.id, label: created.name, group: type === "entrada" ? "Entradas" : "Saídas" };
+}

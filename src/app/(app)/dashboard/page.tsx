@@ -5,6 +5,9 @@ import { transactions, categories, accounts } from "@/lib/db/schema";
 import { and, desc, eq, gte, sql } from "drizzle-orm";
 import { formatEUR, formatDate } from "@/lib/utils";
 import { MonthlyBarChart, type MonthBar } from "@/components/monthly-chart";
+import { HeroBalance } from "@/components/dashboard/hero-balance";
+import { KpiCard, type KpiDelta } from "@/components/dashboard/kpi-card";
+import { FooterCredentials } from "@/components/dashboard/footer-credentials";
 
 export const metadata = { title: "Dashboard" };
 
@@ -14,19 +17,25 @@ export default async function DashboardPage() {
   const today = new Date();
   const monthStart = new Date(today.getFullYear(), today.getMonth(), 1)
     .toISOString().slice(0, 10);
+  const prevMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1)
+    .toISOString().slice(0, 10);
 
-  const [monthAgg] = await db
+  // Agregação unificada N + N-1 numa só query (FILTER WHERE — Postgres 9.4+)
+  const [agg] = await db
     .select({
-      entradas: sql<string>`COALESCE(SUM(CASE WHEN ${transactions.type} = 'entrada' THEN ${transactions.amount} ELSE 0 END), 0)`,
-      saidas:   sql<string>`COALESCE(SUM(CASE WHEN ${transactions.type} = 'saida'   THEN ${transactions.amount} ELSE 0 END), 0)`,
-      total:    sql<number>`COUNT(*)`,
+      entradasN: sql<string>`COALESCE(SUM(${transactions.amount}) FILTER (WHERE ${transactions.type} = 'entrada' AND ${transactions.date} >= ${monthStart}), 0)`,
+      saidasN:   sql<string>`COALESCE(SUM(${transactions.amount}) FILTER (WHERE ${transactions.type} = 'saida'   AND ${transactions.date} >= ${monthStart}), 0)`,
+      movsN:     sql<number>`COUNT(*) FILTER (WHERE ${transactions.date} >= ${monthStart})`,
+      entradasPrev: sql<string>`COALESCE(SUM(${transactions.amount}) FILTER (WHERE ${transactions.type} = 'entrada' AND ${transactions.date} >= ${prevMonthStart} AND ${transactions.date} < ${monthStart}), 0)`,
+      saidasPrev:   sql<string>`COALESCE(SUM(${transactions.amount}) FILTER (WHERE ${transactions.type} = 'saida'   AND ${transactions.date} >= ${prevMonthStart} AND ${transactions.date} < ${monthStart}), 0)`,
+      movsPrev:     sql<number>`COUNT(*) FILTER (WHERE ${transactions.date} >= ${prevMonthStart} AND ${transactions.date} < ${monthStart})`,
     })
     .from(transactions)
     .where(
       and(
         eq(transactions.orgId, ctx.orgId),
-        gte(transactions.date, monthStart)
-      )
+        gte(transactions.date, prevMonthStart),
+      ),
     );
 
   const [allTimeAgg] = await db
@@ -37,11 +46,17 @@ export default async function DashboardPage() {
     .from(transactions)
     .where(eq(transactions.orgId, ctx.orgId));
 
-  const entradasMes = Number(monthAgg.entradas);
-  const saidasMes   = Number(monthAgg.saidas);
+  const entradasMes = Number(agg.entradasN);
+  const saidasMes   = Number(agg.saidasN);
   const liquidoMes  = entradasMes - saidasMes;
+  const movsMes     = Number(agg.movsN);
+
+  const entradasPrev = Number(agg.entradasPrev);
+  const saidasPrev   = Number(agg.saidasPrev);
+  const liquidoPrev  = entradasPrev - saidasPrev;
+  const prevHasData  = Number(agg.movsPrev) > 0;
+
   const saldoTotal  = Number(allTimeAgg.entradas) - Number(allTimeAgg.saidas);
-  const movsMes     = Number(monthAgg.total);
 
   // Janela dos últimos 12 meses, ancorada na data do movimento mais recente
   // (evita gráfico vazio quando os dados não são do mês atual)
@@ -65,7 +80,8 @@ export default async function DashboardPage() {
     .groupBy(sql`TO_CHAR(${transactions.date}, 'YYYY-MM')`)
     .orderBy(sql`TO_CHAR(${transactions.date}, 'YYYY-MM')`);
 
-  const monthlyData: MonthBar[] = buildMonthlySeries(monthlyRows, windowStart);
+  const monthlyDataFull = buildMonthlySeries(monthlyRows, windowStart);
+  const monthlyData = trimToDataWindow(monthlyDataFull, 4);
 
   // Últimos movimentos (independente de data)
   const recent = await db
@@ -88,38 +104,74 @@ export default async function DashboardPage() {
   const monthName = today.toLocaleString("pt-PT", { month: "long", year: "numeric" });
   const greeting = greetingForHour(today.getHours());
 
+  const isEmptyMonth = movsMes === 0;
+  const deltaEntradas = computeDelta(entradasMes, entradasPrev, prevHasData);
+  const deltaSaidas   = computeDelta(saidasMes,   saidasPrev,   prevHasData);
+  const deltaLiquido  = computeDelta(liquidoMes,  liquidoPrev,  prevHasData);
+
+  const hasAnyChartData = monthlyData.some((m) => m.entradas > 0 || m.saidas > 0);
+
   return (
     <div className="px-4 py-5 md:px-10 md:py-7">
-      <div className="mb-7 flex items-start justify-between">
-        <div>
-          <p className="text-sm text-[#4A4A5C]">
-            Início <span className="mx-2">/</span>
-            <strong className="text-ink">Dashboard</strong>
-          </p>
-        </div>
+      <div className="mb-5 flex items-start justify-between gap-3">
+        <p className="text-sm text-[#4A4A5C]">
+          Início <span className="mx-2">/</span>
+          <strong className="text-ink">Dashboard</strong>
+        </p>
         <a href="/movimentos/novo" className="btn btn-primary">+ Novo Movimento</a>
       </div>
 
-      <h1 className="text-3xl font-bold">{greeting}.</h1>
-      <p className="mt-1 text-[#4A4A5C]">
-        Vista geral · {ctx.orgName} · <span className="capitalize">{monthName}</span>
-      </p>
+      <HeroBalance
+        formattedValue={formatEUR(saldoTotal, { showZero: true })}
+        isNegative={saldoTotal < 0}
+        greeting={greeting}
+        orgName={ctx.orgName}
+        monthName={monthName}
+      />
 
-      <div className="mt-7 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Entradas (Mês)"         value={formatEUR(entradasMes)} tone="success" />
-        <KpiCard label="Saídas (Mês)"           value={formatEUR(saidasMes)}   tone="danger" />
-        <KpiCard label="Saldo Líquido (Mês)"    value={formatEUR(liquidoMes)}  tone="primary" />
-        <KpiCard label="Saldo Total (Sempre)"   value={formatEUR(saldoTotal)}  tone="gold" />
+      {/* Divider dourado entre hero e KPIs mensais */}
+      <div
+        aria-hidden="true"
+        className="my-6 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent md:my-8"
+      />
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <KpiCard
+          label="Entradas (Mês)"
+          value={formatEUR(entradasMes)}
+          tone="success"
+          delta={deltaEntradas}
+          isEmpty={isEmptyMonth}
+          goodWhenUp={true}
+        />
+        <KpiCard
+          label="Saídas (Mês)"
+          value={formatEUR(saidasMes)}
+          tone="danger"
+          delta={deltaSaidas}
+          isEmpty={isEmptyMonth}
+          goodWhenUp={false}
+        />
+        <KpiCard
+          label="Saldo Líquido (Mês)"
+          value={formatEUR(liquidoMes)}
+          tone="primary"
+          delta={deltaLiquido}
+          isEmpty={isEmptyMonth}
+          goodWhenUp={true}
+        />
       </div>
 
       {recent.length === 0 && <EmptyState />}
 
-      {recent.length > 0 && monthlyData.some((m) => m.entradas > 0 || m.saidas > 0) && (
-        <div className="mt-7 rounded-lg border border-[#D5D8DC] bg-white p-5">
+      {recent.length > 0 && hasAnyChartData && (
+        <div className="mt-7 rounded-lg border border-[#D5D8DC] bg-white p-5 md:mt-8">
           <div className="mb-3 flex items-start justify-between">
             <div>
               <h3 className="text-base font-bold">Entradas vs Saídas</h3>
-              <p className="text-xs text-[#4A4A5C]">Últimos 12 meses</p>
+              <p className="text-xs text-[#4A4A5C]">
+                {monthlyData.length === 12 ? "Últimos 12 meses" : `Últimos ${monthlyData.length} meses com dados`}
+              </p>
             </div>
           </div>
           <MonthlyBarChart data={monthlyData} />
@@ -127,7 +179,7 @@ export default async function DashboardPage() {
       )}
 
       {recent.length > 0 && (
-        <div className="mt-7 rounded-lg border border-[#D5D8DC] bg-white">
+        <div className="mt-7 rounded-lg border border-[#D5D8DC] bg-white md:mt-8">
           <div className="flex items-center justify-between border-b border-[#D5D8DC] px-5 py-3.5">
             <div>
               <h3 className="text-base font-bold">Últimos movimentos</h3>
@@ -212,9 +264,7 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <p className="mt-12 text-center text-xs text-[#4A4A5C]">
-        ✓ Aprovado por Contabilista Certificado · Alípio Monteiro · CC nº 32897
-      </p>
+      <FooterCredentials />
     </div>
   );
 }
@@ -223,6 +273,14 @@ function greetingForHour(h: number) {
   if (h < 12) return "Bom dia";
   if (h < 19) return "Boa tarde";
   return "Boa noite";
+}
+
+function computeDelta(curr: number, prev: number, prevHasData: boolean): KpiDelta {
+  if (!prevHasData) return { kind: "first-month" };
+  if (curr === 0 && prev === 0) return { kind: "none" };
+  if (prev === 0) return { kind: "new" };
+  const pct = ((curr - prev) / Math.abs(prev)) * 100;
+  return { kind: "pct", value: pct };
 }
 
 function buildMonthlySeries(
@@ -246,29 +304,21 @@ function buildMonthlySeries(
   return result;
 }
 
-function KpiCard({
-  label, value, tone,
-}: {
-  label: string;
-  value: string;
-  tone: "success" | "danger" | "primary" | "gold";
-}) {
-  const color =
-    tone === "success" ? "text-success" :
-    tone === "danger"  ? "text-danger"  :
-    tone === "gold"    ? "text-gold-600" :
-                         "text-primary-600";
-  return (
-    <div className="rounded-lg border border-[#D5D8DC] bg-white p-5 transition-shadow hover:shadow-md">
-      <div className="text-[11px] font-bold uppercase tracking-wider text-[#4A4A5C]">{label}</div>
-      <div className={`mt-1.5 text-3xl font-extrabold tracking-tight ${color}`}>{value}</div>
-    </div>
-  );
+/**
+ * Recorta a série para começar no primeiro mês com dados, mantendo
+ * pelo menos `minMonths` visíveis. Se a série estiver toda vazia,
+ * mantém os últimos `minMonths`.
+ */
+function trimToDataWindow(series: MonthBar[], minMonths: number): MonthBar[] {
+  const firstWithData = series.findIndex((m) => m.entradas > 0 || m.saidas > 0);
+  if (firstWithData === -1) return series.slice(-minMonths);
+  const startIdx = Math.max(0, Math.min(firstWithData, series.length - minMonths));
+  return series.slice(startIdx);
 }
 
 function EmptyState() {
   return (
-    <div className="mt-10 rounded-2xl border-2 border-dashed border-primary-200 bg-white p-10 text-center">
+    <div className="mt-8 rounded-2xl border-2 border-dashed border-primary-200 bg-white p-10 text-center md:mt-10">
       <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-50 text-2xl">
         ✨
       </div>

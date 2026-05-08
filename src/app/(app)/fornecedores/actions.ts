@@ -62,3 +62,25 @@ function pickEmail(v: FormDataEntryValue | null): string | null {
   const s = String(v ?? "").trim();
   return s.includes("@") ? s : null;
 }
+
+/**
+ * Criação inline a partir de comboboxes em outros formulários.
+ */
+export async function createSupplierInline({
+  name,
+}: {
+  name: string;
+}): Promise<{ id: string; label: string } | null> {
+  const ctx = await requireActiveOrg();
+  const trimmed = name.trim();
+  if (!trimmed) return null;
+
+  const [created] = await db.insert(suppliers).values({
+    orgId: ctx.orgId,
+    name: trimmed,
+  }).returning({ id: suppliers.id, name: suppliers.name });
+
+  revalidatePath("/fornecedores");
+
+  return { id: created.id, label: created.name };
+}
