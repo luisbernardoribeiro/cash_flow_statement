@@ -17,30 +17,34 @@ export function HeroBalance({
   sparklineData?: number[];
 }) {
   return (
-    <section className="relative overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-sm md:p-8">
+    <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#15151E] p-6 shadow-lg md:p-8">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-primary-100/60 blur-3xl"
+        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-primary-500/20 blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -left-16 -bottom-16 h-48 w-48 rounded-full bg-gold-500/10 blur-3xl"
+        className="pointer-events-none absolute -left-16 -bottom-16 h-56 w-56 rounded-full bg-gold-500/15 blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-6 left-0 w-[3px] rounded-r bg-gradient-to-b from-gold-500/0 via-gold-500/70 to-gold-500/0"
+        className="pointer-events-none absolute inset-y-6 left-0 w-[3px] rounded-r bg-gradient-to-b from-gold-500/0 via-gold-500/80 to-gold-500/0"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.04] [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:24px_24px]"
       />
 
       <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 md:text-[11px]">
-            Saldo Total · <span className="text-ink">{orgName}</span>
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-gold-500 md:text-[11px]">
+            Saldo Total · <span className="text-white/85">{orgName}</span>
           </p>
           <div className="mt-3">
-            <ShuffleNumber value={value} delta={deltaPct} isNegative={isNegative} />
+            <ShuffleNumber value={value} delta={deltaPct} isNegative={isNegative} inverted />
           </div>
-          <p className="mt-3 text-sm text-gray-600">
-            <span className="font-semibold text-ink">{greeting}.</span>{" "}
+          <p className="mt-3 text-sm text-white/70">
+            <span className="font-semibold text-white">{greeting}.</span>{" "}
             Aqui está onde estás hoje.
           </p>
         </div>
@@ -82,18 +86,18 @@ function Sparkline({ data }: { data: number[] }) {
 
   return (
     <div className="hidden md:block" aria-hidden="true">
-      <p className="mb-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+      <p className="mb-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/45">
         Últimos 6 meses
       </p>
       <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="overflow-visible">
         <defs>
           <linearGradient id="hero-spark-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#2E2C7E" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#2E2C7E" stopOpacity="0" />
+            <stop offset="0%" stopColor="#C8A951" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#C8A951" stopOpacity="0" />
           </linearGradient>
         </defs>
         <path d={areaPath} fill="url(#hero-spark-fill)" />
-        <path d={path} fill="none" stroke="#2E2C7E" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+        <path d={path} fill="none" stroke="#C8A951" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
         <circle cx={last[0]} cy={last[1]} r={3} fill="#C8A951" />
         <circle cx={last[0]} cy={last[1]} r={5} fill="#C8A951" fillOpacity="0.35" />
       </svg>

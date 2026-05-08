@@ -72,8 +72,8 @@ export function AppShell({
   const sidebarWidth = collapsed ? "md:w-16" : "md:w-60";
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-primary-700 bg-primary-600 px-4 text-white md:hidden">
+    <div className="min-h-screen bg-[#0A0A0F] text-white/90">
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/10 bg-[#15151E] px-4 text-white md:hidden">
         <button
           type="button"
           aria-label="Abrir menu"
@@ -94,14 +94,14 @@ export function AppShell({
         {open && (
           <div
             onClick={() => setOpen(false)}
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
             aria-hidden="true"
           />
         )}
 
         <aside
           className={cn(
-            "fixed inset-y-0 left-0 z-50 flex w-60 flex-col border-r border-gray-200 bg-white text-gray-700 shadow-sm transition-all duration-200 md:sticky md:top-0 md:h-screen md:translate-x-0",
+            "fixed inset-y-0 left-0 z-50 flex w-60 flex-col border-r border-white/10 bg-[#15151E] text-white/80 transition-all duration-200 md:sticky md:top-0 md:h-screen md:translate-x-0",
             sidebarWidth,
             collapsed ? "md:px-2 md:py-4" : "p-4",
             !collapsed && "p-4",
@@ -115,14 +115,14 @@ export function AppShell({
               aria-label="MAPA Tesouraria"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/brand/gi-mark.svg" alt="" className="h-8 w-8" />
-              {!collapsed && <strong className="text-lg text-primary-700">MAPA</strong>}
+              <img src="/brand/gi-mark.svg" alt="" className="h-8 w-8 [filter:brightness(0)_invert(1)]" />
+              {!collapsed && <strong className="text-lg text-white">MAPA</strong>}
             </Link>
             <button
               type="button"
               aria-label="Fechar menu"
               onClick={() => setOpen(false)}
-              className="flex h-9 w-9 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 md:hidden"
+              className="flex h-9 w-9 items-center justify-center rounded-md text-white/60 hover:bg-white/10 hover:text-white md:hidden"
             >
               <Close />
             </button>
@@ -133,12 +133,12 @@ export function AppShell({
               <div
                 key={section.label}
                 className={cn(
-                  sIdx > 0 && !collapsed && "mt-4 border-t border-gray-200 pt-3",
-                  sIdx > 0 && collapsed && "md:mt-2 md:border-t md:border-gray-200 md:pt-2",
+                  sIdx > 0 && !collapsed && "mt-4 border-t border-white/10 pt-3",
+                  sIdx > 0 && collapsed && "md:mt-2 md:border-t md:border-white/10 md:pt-2",
                 )}
               >
                 {!collapsed && (
-                  <div className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-gray-400">
+                  <div className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/40">
                     {section.label}
                   </div>
                 )}
@@ -155,8 +155,8 @@ export function AppShell({
                           ? "md:h-10 md:w-10 md:justify-center md:p-0 md:mx-auto"
                           : "gap-3 px-3 py-2.5",
                         active
-                          ? "border-l-2 border-primary-600 bg-primary-50 text-primary-700 shadow-sm"
-                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                          ? "border-l-2 border-gold-500 bg-white/10 text-white"
+                          : "text-white/70 hover:bg-white/5 hover:text-white",
                       )}
                     >
                       <span className={cn("text-center", collapsed ? "" : "w-[18px]")}>
@@ -166,7 +166,7 @@ export function AppShell({
                       {typeof item.count === "number" && item.count > 0 && (
                         <span
                           className={cn(
-                            "ml-auto inline-flex items-center justify-center rounded-full bg-primary-600 px-1.5 text-[10px] font-bold leading-5 text-white",
+                            "ml-auto inline-flex items-center justify-center rounded-full bg-gold-500 px-1.5 text-[10px] font-bold leading-5 text-ink",
                             collapsed && "md:absolute md:-right-1 md:-top-1 md:ml-0 md:h-4 md:min-w-4 md:px-1",
                           )}
                         >
@@ -181,12 +181,12 @@ export function AppShell({
           </nav>
 
           {!collapsed && (
-            <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm">
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">Empresa ativa</div>
-              <div className="mt-1 font-semibold leading-tight text-gray-900">{orgName}</div>
-              <div className="mt-1 truncate text-xs text-gray-500">{email}</div>
+            <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-3 text-sm">
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-white/40">Empresa ativa</div>
+              <div className="mt-1 font-semibold leading-tight text-white">{orgName}</div>
+              <div className="mt-1 truncate text-xs text-white/50">{email}</div>
               <form action="/sair" method="post" className="mt-3">
-                <button type="submit" className="w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 transition-colors hover:bg-gray-50">
+                <button type="submit" className="w-full rounded-md border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-white">
                   Sair
                 </button>
               </form>
@@ -198,7 +198,7 @@ export function AppShell({
             onClick={() => setCollapsed((v) => !v)}
             aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
             className={cn(
-              "mt-3 hidden items-center gap-2 rounded-md border border-gray-200 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 md:flex",
+              "mt-3 hidden items-center gap-2 rounded-md border border-white/10 text-sm font-medium text-white/65 transition-colors hover:bg-white/5 hover:text-white md:flex",
               collapsed ? "md:justify-center md:p-2" : "px-3 py-2",
             )}
           >

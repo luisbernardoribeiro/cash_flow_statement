@@ -178,12 +178,12 @@ export default async function DashboardPage() {
     <div className="px-4 py-5 md:px-10 md:py-7">
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between md:mb-8">
         <div className="min-w-0">
-          <h1 className="text-2xl font-extrabold tracking-tight text-ink md:text-3xl">Dashboard</h1>
-          <p className="mt-1 text-sm text-[#4A4A5C]">
+          <h1 className="text-2xl font-extrabold tracking-tight text-white md:text-3xl">Dashboard</h1>
+          <p className="mt-1 text-sm text-white/55">
             Visão geral da tua tesouraria · <span className="capitalize">{monthName}</span>
           </p>
         </div>
-        <a href="/movimentos/novo" className="btn btn-primary self-start sm:self-auto">+ Novo Movimento</a>
+        <a href="/movimentos/novo" className="inline-flex items-center justify-center self-start rounded-md bg-gold-500 px-4 py-2.5 text-sm font-semibold text-ink shadow-sm transition-colors hover:bg-gold-600 sm:self-auto">+ Novo Movimento</a>
       </div>
 
       <HeroBalance
@@ -234,11 +234,11 @@ export default async function DashboardPage() {
       {recent.length === 0 && <EmptyState />}
 
       {recent.length > 0 && hasAnyChartData && (
-        <div className="mt-7 rounded-xl border border-[#D5D8DC] bg-white p-5 shadow-sm md:mt-8">
+        <div className="mt-7 rounded-xl border border-white/10 bg-[#15151E] p-5 shadow-sm md:mt-8">
           <div className="mb-3 flex items-start justify-between">
             <div>
-              <h3 className="text-base font-bold">Entradas vs Saídas</h3>
-              <p className="text-xs text-[#4A4A5C]">
+              <h3 className="text-base font-bold text-white">Entradas vs Saídas</h3>
+              <p className="text-xs text-white/55">
                 {monthlyData.length === 12 ? "Últimos 12 meses" : `Últimos ${monthlyData.length} meses com dados`}
               </p>
             </div>
@@ -249,37 +249,37 @@ export default async function DashboardPage() {
 
       {recent.length > 0 && (
         <div className="mt-7 grid grid-cols-1 gap-4 md:mt-8 lg:grid-cols-3">
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm lg:col-span-2">
-          <div className="flex items-center justify-between border-b border-gray-200 px-5 py-3.5">
+        <div className="rounded-xl border border-white/10 bg-[#15151E] shadow-sm lg:col-span-2">
+          <div className="flex items-center justify-between border-b border-white/10 px-5 py-3.5">
             <div>
-              <h3 className="text-base font-bold">Últimos movimentos</h3>
-              <p className="text-xs text-gray-500">{recent.length} mais recentes</p>
+              <h3 className="text-base font-bold text-white">Últimos movimentos</h3>
+              <p className="text-xs text-white/50">{recent.length} mais recentes</p>
             </div>
-            <Link href="/movimentos" className="text-sm font-semibold text-primary-600 hover:underline">
+            <Link href="/movimentos" className="text-sm font-semibold text-gold-500 hover:text-gold-400 hover:underline">
               Ver tudo →
             </Link>
           </div>
           {/* Mobile: cards */}
-          <ul className="divide-y divide-[#D5D8DC] md:hidden">
+          <ul className="divide-y divide-white/10 md:hidden">
             {recent.map((r) => {
               const isIn = r.type === "entrada";
               const RowIcon = isIn ? TrendingUp : TrendingDown;
               return (
                 <li key={r.id}>
-                  <Link href={`/movimentos/${r.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-primary-50/20">
-                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
-                      isIn ? "bg-success-bg" : "bg-danger-bg"
+                  <Link href={`/movimentos/${r.id}`} className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/5">
+                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border ${
+                      isIn ? "bg-emerald-500/15 border-emerald-500/30" : "bg-rose-500/15 border-rose-500/30"
                     }`}>
-                      <RowIcon className={`h-5 w-5 ${isIn ? "text-success" : "text-danger"}`} aria-hidden="true" />
+                      <RowIcon className={`h-5 w-5 ${isIn ? "text-emerald-400" : "text-rose-400"}`} aria-hidden="true" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="line-clamp-1 font-medium leading-snug">{r.description}</div>
-                      <div className="mt-0.5 truncate text-xs text-[#4A4A5C]">
+                      <div className="line-clamp-1 font-medium leading-snug text-white/90">{r.description}</div>
+                      <div className="mt-0.5 truncate text-xs text-white/50">
                         {r.categoryName ?? "—"}{r.accountName && <> · {r.accountName}</>} · {formatDate(r.date)}
                       </div>
                     </div>
                     <div className={`shrink-0 text-right font-bold tabular-nums whitespace-nowrap ${
-                      isIn ? "text-success" : "text-danger"
+                      isIn ? "text-emerald-400" : "text-rose-400"
                     }`}>
                       {isIn ? "+ " : "- "}{formatEUR(Number(r.amount))}
                     </div>
@@ -291,13 +291,13 @@ export default async function DashboardPage() {
 
           {/* Desktop: tabela */}
           <table className="hidden w-full text-sm md:table">
-            <thead className="bg-primary-50/40">
+            <thead className="bg-white/5">
               <tr>
-                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]" colSpan={2}>Movimento</th>
-                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Categoria</th>
-                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Conta</th>
-                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Data</th>
-                <th className="px-5 py-2.5 text-right text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Valor</th>
+                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-white/50" colSpan={2}>Movimento</th>
+                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-white/50">Categoria</th>
+                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-white/50">Conta</th>
+                <th className="px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-white/50">Data</th>
+                <th className="px-5 py-2.5 text-right text-xs font-bold uppercase tracking-wider text-white/50">Valor</th>
               </tr>
             </thead>
             <tbody>
@@ -305,20 +305,20 @@ export default async function DashboardPage() {
                 const isIn = r.type === "entrada";
                 const RowIcon = isIn ? TrendingUp : TrendingDown;
                 return (
-                  <tr key={r.id} className="border-t border-[#D5D8DC] hover:bg-primary-50/20">
+                  <tr key={r.id} className="border-t border-white/10 transition-colors hover:bg-white/5">
                     <td className="py-3 pl-5 pr-2 align-middle">
-                      <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                        isIn ? "bg-success-bg" : "bg-danger-bg"
+                      <div className={`flex h-9 w-9 items-center justify-center rounded-lg border ${
+                        isIn ? "bg-emerald-500/15 border-emerald-500/30" : "bg-rose-500/15 border-rose-500/30"
                       }`}>
-                        <RowIcon className={`h-4 w-4 ${isIn ? "text-success" : "text-danger"}`} aria-hidden="true" />
+                        <RowIcon className={`h-4 w-4 ${isIn ? "text-emerald-400" : "text-rose-400"}`} aria-hidden="true" />
                       </div>
                     </td>
-                    <td className="py-3 pr-5 align-middle">{r.description}</td>
-                    <td className="px-5 py-3 align-middle text-[#4A4A5C]">{r.categoryName ?? "—"}</td>
-                    <td className="px-5 py-3 align-middle text-[#4A4A5C]">{r.accountName ?? "—"}</td>
-                    <td className="px-5 py-3 align-middle whitespace-nowrap text-[#4A4A5C]">{formatDate(r.date)}</td>
+                    <td className="py-3 pr-5 align-middle text-white/90">{r.description}</td>
+                    <td className="px-5 py-3 align-middle text-white/60">{r.categoryName ?? "—"}</td>
+                    <td className="px-5 py-3 align-middle text-white/60">{r.accountName ?? "—"}</td>
+                    <td className="px-5 py-3 align-middle whitespace-nowrap text-white/60">{formatDate(r.date)}</td>
                     <td className={`px-5 py-3 align-middle text-right font-bold tabular-nums whitespace-nowrap ${
-                      isIn ? "text-success" : "text-danger"
+                      isIn ? "text-emerald-400" : "text-rose-400"
                     }`}>
                       {isIn ? "+ " : "- "}{formatEUR(Number(r.amount))}
                     </td>
@@ -330,15 +330,15 @@ export default async function DashboardPage() {
         </div>
 
         <div className="space-y-4">
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="rounded-xl border border-white/10 bg-[#15151E] p-5 shadow-sm">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold">Top Categorias</h3>
-                <p className="text-xs capitalize text-gray-500">Saídas · {anchorMonthName}</p>
+                <h3 className="text-base font-bold text-white">Top Categorias</h3>
+                <p className="text-xs capitalize text-white/50">Saídas · {anchorMonthName}</p>
               </div>
             </div>
             {topCategorias.length === 0 ? (
-              <p className="text-sm text-gray-500">Sem saídas neste período.</p>
+              <p className="text-sm text-white/50">Sem saídas neste período.</p>
             ) : (
               <ul className="space-y-3">
                 {topCategorias.map((c) => {
@@ -347,16 +347,16 @@ export default async function DashboardPage() {
                   return (
                     <li key={c.name ?? "—"}>
                       <div className="mb-1 flex items-center justify-between gap-3">
-                        <span className="truncate text-sm font-medium text-gray-700">
+                        <span className="truncate text-sm font-medium text-white/85">
                           {c.name ?? "Sem categoria"}
                         </span>
-                        <span className="shrink-0 text-sm font-semibold tabular-nums text-ink">
+                        <span className="shrink-0 text-sm font-semibold tabular-nums text-white">
                           {formatEUR(total)}
                         </span>
                       </div>
-                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-primary-600 to-primary-500"
+                          className="h-full rounded-full bg-gradient-to-r from-gold-500 to-gold-400"
                           style={{ width: `${pct.toFixed(1)}%` }}
                         />
                       </div>
@@ -367,27 +367,27 @@ export default async function DashboardPage() {
             )}
           </div>
 
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="rounded-xl border border-white/10 bg-[#15151E] p-5 shadow-sm">
             <div className="mb-4">
-              <h3 className="text-base font-bold">Resumo do mês</h3>
-              <p className="text-xs capitalize text-gray-500">{anchorMonthName}</p>
+              <h3 className="text-base font-bold text-white">Resumo do mês</h3>
+              <p className="text-xs capitalize text-white/50">{anchorMonthName}</p>
             </div>
             <dl className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
-                <dt className="text-gray-500">Movimentos</dt>
-                <dd className="font-semibold tabular-nums text-ink">{Number(quickStats.count)}</dd>
+                <dt className="text-white/55">Movimentos</dt>
+                <dd className="font-semibold tabular-nums text-white">{Number(quickStats.count)}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-gray-500">Média</dt>
-                <dd className="font-semibold tabular-nums text-ink">{formatEUR(Number(quickStats.avgValor))}</dd>
+                <dt className="text-white/55">Média</dt>
+                <dd className="font-semibold tabular-nums text-white">{formatEUR(Number(quickStats.avgValor))}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-gray-500">Maior entrada</dt>
-                <dd className="font-semibold tabular-nums text-success">{formatEUR(Number(quickStats.maxEntrada))}</dd>
+                <dt className="text-white/55">Maior entrada</dt>
+                <dd className="font-semibold tabular-nums text-emerald-400">{formatEUR(Number(quickStats.maxEntrada))}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-gray-500">Maior saída</dt>
-                <dd className="font-semibold tabular-nums text-danger">{formatEUR(Number(quickStats.maxSaida))}</dd>
+                <dt className="text-white/55">Maior saída</dt>
+                <dd className="font-semibold tabular-nums text-rose-400">{formatEUR(Number(quickStats.maxSaida))}</dd>
               </div>
             </dl>
           </div>
@@ -449,16 +449,16 @@ function trimToDataWindow(series: MonthBar[], minMonths: number): MonthBar[] {
 
 function EmptyState() {
   return (
-    <div className="mt-8 rounded-2xl border-2 border-dashed border-primary-200 bg-white p-10 text-center md:mt-10">
-      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-50 text-2xl">
+    <div className="mt-8 rounded-2xl border-2 border-dashed border-white/15 bg-[#15151E] p-10 text-center md:mt-10">
+      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gold-500/15 text-2xl">
         ✨
       </div>
-      <h3 className="text-xl font-bold">Tudo pronto. Vamos lá começar?</h3>
-      <p className="mx-auto mt-2 mb-5 max-w-md text-sm text-[#4A4A5C]">
+      <h3 className="text-xl font-bold text-white">Tudo pronto. Vamos lá começar?</h3>
+      <p className="mx-auto mt-2 mb-5 max-w-md text-sm text-white/60">
         A tua app já vem com as 20 categorias e as 3 contas do método GI.
         Regista o primeiro movimento — uma venda, uma compra, uma despesa.
       </p>
-      <a href="/movimentos/novo" className="btn btn-primary">+ Registar primeiro movimento</a>
+      <a href="/movimentos/novo" className="inline-flex items-center justify-center rounded-md bg-gold-500 px-5 py-3 text-sm font-semibold text-ink shadow-sm transition-colors hover:bg-gold-600">+ Registar primeiro movimento</a>
     </div>
   );
 }
