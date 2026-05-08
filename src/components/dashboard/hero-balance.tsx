@@ -1,4 +1,5 @@
 import { CCSeal } from "./cc-seal";
+import { HeroBackdrop } from "./hero-backdrop";
 import { ShuffleNumber } from "@/components/ui/shuffle-number";
 
 export function HeroBalance({
@@ -17,25 +18,8 @@ export function HeroBalance({
   sparklineData?: number[];
 }) {
   return (
-    <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-600 via-primary-700 to-primary-700 p-6 shadow-xl ring-1 ring-primary-700/40 md:p-8">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-gold-500/30 blur-3xl"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -left-32 bottom-0 h-64 w-64 rounded-full bg-primary-400/30 blur-3xl"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 w-[3px] bg-gradient-to-b from-gold-500/0 via-gold-500/80 to-gold-500/0"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.04] [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:24px_24px]"
-      />
-
-      <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
+    <HeroBackdrop>
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
         <div className="min-w-0 flex-1">
           <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-gold-500 md:text-[11px]">
             Saldo Total · <span className="text-white/85">{orgName}</span>
@@ -43,7 +27,7 @@ export function HeroBalance({
           <div className="mt-3">
             <ShuffleNumber value={value} delta={deltaPct} isNegative={isNegative} inverted />
           </div>
-          <p className="mt-3 text-sm text-white/75">
+          <p className="mt-3 text-sm text-white/70">
             <span className="font-semibold text-white">{greeting}.</span>{" "}
             Aqui está onde estás hoje.
           </p>
@@ -56,7 +40,7 @@ export function HeroBalance({
           <CCSeal />
         </div>
       </div>
-    </section>
+    </HeroBackdrop>
   );
 }
 
@@ -92,14 +76,17 @@ function Sparkline({ data }: { data: number[] }) {
       <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="overflow-visible">
         <defs>
           <linearGradient id="hero-spark-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#C8A951" stopOpacity="0.35" />
+            <stop offset="0%" stopColor="#C8A951" stopOpacity="0.45" />
             <stop offset="100%" stopColor="#C8A951" stopOpacity="0" />
           </linearGradient>
         </defs>
         <path d={areaPath} fill="url(#hero-spark-fill)" />
         <path d={path} fill="none" stroke="#C8A951" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
         <circle cx={last[0]} cy={last[1]} r={3} fill="#C8A951" />
-        <circle cx={last[0]} cy={last[1]} r={5} fill="#C8A951" fillOpacity="0.3" />
+        <circle cx={last[0]} cy={last[1]} r={5} fill="#C8A951" fillOpacity="0.35">
+          <animate attributeName="r" values="5;8;5" dur="2.4s" repeatCount="indefinite" />
+          <animate attributeName="fill-opacity" values="0.35;0.05;0.35" dur="2.4s" repeatCount="indefinite" />
+        </circle>
       </svg>
     </div>
   );
