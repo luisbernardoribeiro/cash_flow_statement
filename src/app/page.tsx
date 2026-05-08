@@ -115,9 +115,9 @@ export default function HomePage() {
 function Logo() {
   return (
     <Link href="/" className="flex items-center gap-3" aria-label="MAPA Tesouraria — by GI ADVISE">
-      {/* Mark (símbolo) — sempre visível */}
+      {/* Logo GI ADVISE — formato vertical */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/logo-mapa-mark.svg" alt="" className="h-11 w-11" />
+      <img src="/brand/gi-logo.svg" alt="" className="h-12 w-auto" />
       <span className="flex flex-col leading-none">
         <span className="text-lg font-extrabold tracking-tight text-primary-600">
           MAPA <span className="font-normal italic text-primary-400">Fluxos Tesouraria</span>
