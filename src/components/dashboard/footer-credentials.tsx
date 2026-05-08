@@ -22,7 +22,7 @@ export function FooterCredentials() {
             Plataforma da <strong className="text-ink">GI ADVISE — Contabilidade Consultoria</strong>
           </p>
           <blockquote className="mt-3 border-l-2 border-gold-500 pl-3 text-sm italic text-[#4A4A5C]">
-            &ldquo;Em 20 anos de carteira, vi o mesmo erro repetir-se: empresários inteligentes a tomar decisões sem saber o saldo real. O MAPA é a ferramenta que sempre quis dar aos meus clientes. Agora damos a todos.&rdquo;
+            &ldquo;Em mais de 40 anos de carteira, vi o mesmo erro repetir-se: empresários inteligentes a tomar decisões sem saber o saldo real. O MAPA é a ferramenta que sempre quis dar aos meus clientes. Agora damos a todos.&rdquo;
           </blockquote>
         </div>
       </div>

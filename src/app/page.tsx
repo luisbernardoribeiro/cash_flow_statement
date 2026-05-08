@@ -37,7 +37,7 @@ export default function HomePage() {
               em app.
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-[#4A4A5C] lg:text-xl">
-              Vinte anos de experiência do <strong>Alípio Monteiro CC</strong> a controlar a tesouraria de PMEs portuguesas, agora numa plataforma: <strong>categorias prontas, fluxos definidos, regras certas</strong>. Não precisas de pensar — basta registar.
+              Mais de quatro décadas de experiência do <strong>Alípio Monteiro CC</strong> a controlar a tesouraria de PMEs portuguesas, agora numa plataforma: <strong>categorias prontas, fluxos definidos, regras certas</strong>. Não precisas de pensar — basta registar.
             </p>
             <div className="mt-7 flex flex-wrap gap-4">
               <Link href="/entrar" className="btn btn-primary">
@@ -80,7 +80,7 @@ export default function HomePage() {
                 Member, Institute of Internal Audit (IIA)
               </p>
               <blockquote className="mt-5 border-l-4 border-gold-500 pl-5 text-lg italic text-ink lg:text-xl">
-                Em 20 anos de carteira, vi o mesmo erro repetir-se: empresários
+                Em mais de 40 anos de carteira, vi o mesmo erro repetir-se: empresários
                 inteligentes a tomar decisões sem saber o saldo real. O MAPA é a
                 ferramenta que sempre quis dar aos meus clientes. Agora damos a todos.
               </blockquote>
