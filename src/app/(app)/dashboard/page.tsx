@@ -3,6 +3,7 @@ import { requireActiveOrg } from "@/lib/auth";
 import { db } from "@/lib/db/client";
 import { transactions, categories, accounts } from "@/lib/db/schema";
 import { and, desc, eq, gte, sql } from "drizzle-orm";
+import { ArrowDownToLine, ArrowUpFromLine, Wallet } from "lucide-react";
 import { formatEUR, formatDate } from "@/lib/utils";
 import { MonthlyBarChart, type MonthBar } from "@/components/monthly-chart";
 import { HeroBalance } from "@/components/dashboard/hero-balance";
@@ -109,6 +110,14 @@ export default async function DashboardPage() {
   const deltaSaidas   = computeDelta(saidasMes,   saidasPrev,   prevHasData);
   const deltaLiquido  = computeDelta(liquidoMes,  liquidoPrev,  prevHasData);
 
+  // Saldo no início do mês = saldo total - líquido deste mês.
+  // Mostramos a variação % do saldo total face a esse ponto, como fração para NumberFlow ("percent").
+  const saldoInicioMes = saldoTotal - liquidoMes;
+  const saldoDeltaPct =
+    saldoInicioMes !== 0 && movsMes > 0
+      ? liquidoMes / Math.abs(saldoInicioMes)
+      : null;
+
   const hasAnyChartData = monthlyData.some((m) => m.entradas > 0 || m.saidas > 0);
 
   return (
@@ -122,8 +131,9 @@ export default async function DashboardPage() {
       </div>
 
       <HeroBalance
-        formattedValue={formatEUR(saldoTotal, { showZero: true })}
+        value={saldoTotal}
         isNegative={saldoTotal < 0}
+        deltaPct={saldoDeltaPct}
         greeting={greeting}
         orgName={ctx.orgName}
         monthName={monthName}
@@ -140,6 +150,7 @@ export default async function DashboardPage() {
           label="Entradas (Mês)"
           value={formatEUR(entradasMes)}
           tone="success"
+          icon={ArrowDownToLine}
           delta={deltaEntradas}
           isEmpty={isEmptyMonth}
           goodWhenUp={true}
@@ -148,6 +159,7 @@ export default async function DashboardPage() {
           label="Saídas (Mês)"
           value={formatEUR(saidasMes)}
           tone="danger"
+          icon={ArrowUpFromLine}
           delta={deltaSaidas}
           isEmpty={isEmptyMonth}
           goodWhenUp={false}
@@ -156,6 +168,7 @@ export default async function DashboardPage() {
           label="Saldo Líquido (Mês)"
           value={formatEUR(liquidoMes)}
           tone="primary"
+          icon={Wallet}
           delta={deltaLiquido}
           isEmpty={isEmptyMonth}
           goodWhenUp={true}

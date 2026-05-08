@@ -3,9 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ChevronsRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const NAV = [
+type NavItem = {
+  href: string;
+  label: string;
+  icon: string;
+  count?: number;
+};
+
+const NAV: NavItem[] = [
   { href: "/dashboard",     label: "Dashboard",     icon: "📊" },
   { href: "/movimentos",    label: "Movimentos",    icon: "€" },
   { href: "/fluxo-mensal",  label: "Fluxo Mensal",  icon: "📅" },
@@ -26,20 +34,20 @@ export function AppShell({
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
-  // Fecha o drawer ao navegar
   useEffect(() => { setOpen(false); }, [pathname]);
 
-  // Bloqueia scroll do body quando drawer aberto (mobile)
   useEffect(() => {
     if (open) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
+  const sidebarWidth = collapsed ? "md:w-16" : "md:w-60";
+
   return (
     <div className="min-h-screen bg-primary-50/40">
-      {/* Top bar mobile (só visível em <md) */}
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-primary-700 bg-primary-600 px-4 text-white md:hidden">
         <button
           type="button"
@@ -54,11 +62,10 @@ export function AppShell({
           <img src="/brand/gi-mark.svg" alt="" className="h-8 w-8 [filter:brightness(0)_invert(1)]" />
           <strong className="text-lg">MAPA</strong>
         </Link>
-        <div className="w-10" /> {/* placeholder para centrar o brand */}
+        <div className="w-10" />
       </header>
 
       <div className="flex">
-        {/* Backdrop mobile (clicar fecha) */}
         {open && (
           <div
             onClick={() => setOpen(false)}
@@ -67,20 +74,25 @@ export function AppShell({
           />
         )}
 
-        {/* Sidebar */}
         <aside
           className={cn(
-            "fixed inset-y-0 left-0 z-50 flex w-60 flex-col bg-primary-600 p-5 text-white transition-transform duration-200 md:static md:translate-x-0",
+            "fixed inset-y-0 left-0 z-50 flex w-60 flex-col bg-primary-600 text-white transition-all duration-200 md:static md:translate-x-0",
+            sidebarWidth,
+            collapsed ? "md:px-2 md:py-4" : "p-5",
+            !collapsed && "p-5",
             open ? "translate-x-0 shadow-xl" : "-translate-x-full md:translate-x-0",
           )}
         >
-          <div className="mb-7 flex items-center justify-between">
-            <Link href="/dashboard" className="flex items-center gap-2.5 px-1.5" aria-label="MAPA Tesouraria">
+          <div className={cn("mb-7 flex items-center", collapsed ? "md:justify-center md:mb-4" : "justify-between")}>
+            <Link
+              href="/dashboard"
+              className={cn("flex items-center gap-2.5", collapsed ? "md:px-0" : "px-1.5")}
+              aria-label="MAPA Tesouraria"
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/brand/gi-mark.svg" alt="" className="h-8 w-8 [filter:brightness(0)_invert(1)]" />
-              <strong className="text-lg">MAPA</strong>
+              {!collapsed && <strong className="text-lg">MAPA</strong>}
             </Link>
-            {/* Botão fechar (só mobile) */}
             <button
               type="button"
               aria-label="Fechar menu"
@@ -91,40 +103,76 @@ export function AppShell({
             </button>
           </div>
 
-          <nav className="flex-1 overflow-y-auto">
+          <nav className="flex-1 overflow-y-auto overflow-x-hidden">
             {NAV.map((item) => {
               const active = pathname.startsWith(item.href);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
+                  title={collapsed ? item.label : undefined}
                   className={cn(
-                    "mb-1 flex items-center gap-3 rounded-md px-3.5 py-2.5 text-sm font-medium transition-colors",
+                    "relative mb-1 flex items-center rounded-md text-sm font-medium transition-colors",
+                    collapsed
+                      ? "md:h-10 md:w-10 md:justify-center md:p-0 md:mx-auto"
+                      : "gap-3 px-3.5 py-2.5",
                     active
                       ? "bg-white/15 text-white"
                       : "text-white/75 hover:bg-white/10 hover:text-white",
                   )}
                 >
-                  <span className="w-[18px] text-center opacity-90">{item.icon}</span>
-                  {item.label}
+                  <span className={cn("text-center opacity-90", collapsed ? "" : "w-[18px]")}>
+                    {item.icon}
+                  </span>
+                  {!collapsed && <span className="truncate">{item.label}</span>}
+                  {typeof item.count === "number" && item.count > 0 && (
+                    <span
+                      className={cn(
+                        "ml-auto inline-flex items-center justify-center rounded-full bg-gold-500 px-1.5 text-[10px] font-bold leading-5 text-ink",
+                        collapsed && "md:absolute md:-right-1 md:-top-1 md:ml-0 md:h-4 md:min-w-4 md:px-1",
+                      )}
+                    >
+                      {item.count > 99 ? "99+" : item.count}
+                    </span>
+                  )}
                 </Link>
               );
             })}
           </nav>
 
-          <div className="mt-4 rounded-md bg-white/10 p-3.5 text-sm">
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-white/55">Empresa ativa</div>
-            <div className="mt-1 font-semibold leading-tight">{orgName}</div>
-            <div className="mt-2 truncate text-xs text-white/65">{email}</div>
-            <form action="/sair" method="post" className="mt-3">
-              <button type="submit" className="w-full rounded-md border border-white/20 px-3 py-1.5 text-xs font-semibold text-white/85 hover:bg-white/10">
-                Sair
-              </button>
-            </form>
-          </div>
+          {!collapsed && (
+            <div className="mt-4 rounded-md bg-white/10 p-3.5 text-sm">
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-white/55">Empresa ativa</div>
+              <div className="mt-1 font-semibold leading-tight">{orgName}</div>
+              <div className="mt-2 truncate text-xs text-white/65">{email}</div>
+              <form action="/sair" method="post" className="mt-3">
+                <button type="submit" className="w-full rounded-md border border-white/20 px-3 py-1.5 text-xs font-semibold text-white/85 hover:bg-white/10">
+                  Sair
+                </button>
+              </form>
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setCollapsed((v) => !v)}
+            aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+            className={cn(
+              "mt-3 hidden items-center gap-2 rounded-md border border-white/15 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 md:flex",
+              collapsed ? "md:justify-center md:p-2" : "px-3 py-2",
+            )}
+          >
+            <ChevronsRight
+              className={cn(
+                "h-4 w-4 shrink-0 transition-transform duration-300",
+                !collapsed && "rotate-180",
+              )}
+              aria-hidden="true"
+            />
+            {!collapsed && <span>Ocultar</span>}
+          </button>
         </aside>
 
-        {/* Conteúdo */}
         <main className="min-w-0 flex-1 overflow-x-auto">{children}</main>
       </div>
     </div>
