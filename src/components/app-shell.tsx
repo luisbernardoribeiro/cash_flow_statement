@@ -51,7 +51,7 @@ export function AppShell({
         </button>
         <Link href="/dashboard" className="flex items-center gap-2" aria-label="MAPA Tesouraria">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/gi-mark.svg" alt="" className="h-8 w-8 rounded-lg bg-white p-1" />
+          <img src="/brand/gi-mark.svg" alt="" className="h-8 w-8 [filter:brightness(0)_invert(1)]" />
           <strong className="text-lg">MAPA</strong>
         </Link>
         <div className="w-10" /> {/* placeholder para centrar o brand */}
@@ -77,7 +77,7 @@ export function AppShell({
           <div className="mb-7 flex items-center justify-between">
             <Link href="/dashboard" className="flex items-center gap-2.5 px-1.5" aria-label="MAPA Tesouraria">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/brand/gi-mark.svg" alt="" className="h-8 w-8 rounded-lg bg-white p-1" />
+              <img src="/brand/gi-mark.svg" alt="" className="h-8 w-8 [filter:brightness(0)_invert(1)]" />
               <strong className="text-lg">MAPA</strong>
             </Link>
             {/* Botão fechar (só mobile) */}
