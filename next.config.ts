@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    typedRoutes: true,
-  },
+  // typedRoutes desativado durante MVP — reativar quando todas as rotas existirem
+  experimental: {},
 };
 
 export default nextConfig;
