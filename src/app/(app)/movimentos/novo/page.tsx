@@ -27,7 +27,7 @@ export default async function NovoMovimentoPage({ searchParams }: { searchParams
   const initialType = params.tipo === "entrada" || params.tipo === "saida" ? params.tipo : "entrada";
 
   return (
-    <div className="px-10 py-7">
+    <div className="px-4 py-5 md:px-10 md:py-7">
       <PageHeader
         title="Novo Movimento"
         breadcrumb={[

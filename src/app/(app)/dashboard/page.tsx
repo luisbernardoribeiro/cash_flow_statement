@@ -89,7 +89,7 @@ export default async function DashboardPage() {
   const greeting = greetingForHour(today.getHours());
 
   return (
-    <div className="px-10 py-7">
+    <div className="px-4 py-5 md:px-10 md:py-7">
       <div className="mb-7 flex items-start justify-between">
         <div>
           <p className="text-sm text-[#4A4A5C]">

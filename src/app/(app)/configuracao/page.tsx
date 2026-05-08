@@ -22,7 +22,7 @@ export default async function ConfiguracaoPage({ searchParams }: { searchParams:
     .from(users).where(eq(users.id, ctx.userId)).limit(1);
 
   return (
-    <div className="px-10 py-7">
+    <div className="px-4 py-5 md:px-10 md:py-7">
       <PageHeader
         title="Configuração"
         breadcrumb={[{ label: "Início", href: "/dashboard" }, { label: "Configuração" }]}

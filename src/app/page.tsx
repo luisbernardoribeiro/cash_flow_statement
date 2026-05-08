@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { AvatarFallback } from "@/components/avatar-fallback";
 
 const BRAND = process.env.NEXT_PUBLIC_BRAND_NAME ?? "MAPA Tesouraria";
 const CC_NUMBER = process.env.NEXT_PUBLIC_CC_NUMBER ?? "32897";
@@ -8,26 +8,27 @@ export default function HomePage() {
   return (
     <main className="min-h-screen">
       <header className="border-b border-primary-100">
-        <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-6">
+        <div className="mx-auto flex h-[64px] max-w-7xl items-center justify-between gap-3 px-4 md:h-[72px] md:px-6">
           <Logo />
-          <nav className="flex items-center gap-7 text-sm font-medium">
-            <a href="#funcionalidades" className="text-ink hover:text-primary-600">Funcionalidades</a>
-            <a href="#planos" className="text-ink hover:text-primary-600">Planos</a>
-            <a href="#sobre" className="text-ink hover:text-primary-600">Sobre a GI</a>
-            <Link href="/entrar" className="btn btn-ghost">Entrar</Link>
-            <Link href="/registar" className="btn btn-primary">Experimentar 14 dias grátis</Link>
+          <nav className="flex items-center gap-3 text-sm font-medium md:gap-7">
+            <a href="#sobre" className="hidden text-ink hover:text-primary-600 lg:inline">Sobre a GI</a>
+            <Link href="/entrar" className="hidden btn btn-ghost sm:inline-flex">Entrar</Link>
+            <Link href="/entrar" className="btn btn-primary text-sm md:text-base">
+              <span className="hidden sm:inline">Experimentar 14 dias grátis</span>
+              <span className="sm:hidden">Começar →</span>
+            </Link>
           </nav>
         </div>
       </header>
 
       <section
-        className="px-6 py-20 lg:py-28"
+        className="px-4 py-12 md:px-6 md:py-20 lg:py-28"
         style={{
           background:
             "radial-gradient(1000px 400px at 110% -10%, rgba(46,44,126,.08), transparent 60%), radial-gradient(700px 350px at -10% 80%, rgba(200,169,81,.10), transparent 60%)",
         }}
       >
-        <div className="mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-[1.15fr_1fr]">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 md:gap-16 lg:grid-cols-[1.15fr_1fr]">
           <div>
             <span className="cc-badge">Criado por Contabilista Certificado · CC nº {CC_NUMBER}</span>
             <h1 className="mt-6 text-4xl font-extrabold leading-[1.1] tracking-tight lg:text-6xl">
@@ -66,16 +67,12 @@ export default function HomePage() {
                 "linear-gradient(135deg, var(--tw-gradient-stops)), #fff",
             }}
           >
-            <div className="relative h-[180px] w-[180px] overflow-hidden rounded-full ring-4 ring-primary-100 shadow-lg mx-auto lg:mx-0">
-              <Image
-                src="/alipio.jpg"
-                alt="Alípio Monteiro — Contabilista Certificado nº 32897"
-                fill
-                sizes="180px"
-                className="object-cover"
-                priority
-              />
-            </div>
+            <AvatarFallback
+              src="/alipio.jpg"
+              alt="Alípio Monteiro — Contabilista Certificado nº 32897"
+              initials="AM"
+              size={180}
+            />
             <div>
               <h3 className="text-2xl font-bold lg:text-3xl">Alípio Monteiro</h3>
               <p className="mt-2 text-sm text-[#4A4A5C] lg:text-base">

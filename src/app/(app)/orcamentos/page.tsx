@@ -110,7 +110,7 @@ export default async function OrcamentosPage({ searchParams }: { searchParams: S
   const hasBudget = budgetRows.length > 0;
 
   return (
-    <div className="px-10 py-7">
+    <div className="px-4 py-5 md:px-10 md:py-7">
       <PageHeader
         title="Orçamentos"
         breadcrumb={[{ label: "Início", href: "/dashboard" }, { label: "Orçamentos" }]}

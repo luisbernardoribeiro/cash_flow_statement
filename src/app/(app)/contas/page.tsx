@@ -37,7 +37,7 @@ export default async function ContasPage({ searchParams }: { searchParams: Searc
   const editing = params.edit ? rows.find((r) => r.id === params.edit) : null;
 
   return (
-    <div className="px-10 py-7">
+    <div className="px-4 py-5 md:px-10 md:py-7">
       <PageHeader
         title="Contas / Caixas"
         breadcrumb={[{ label: "Início", href: "/dashboard" }, { label: "Contas" }]}

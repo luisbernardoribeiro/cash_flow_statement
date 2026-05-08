@@ -13,7 +13,7 @@ export default async function ImportarPage({ searchParams }: { searchParams: Sea
   const ok = params.ok === "1";
 
   return (
-    <div className="px-10 py-7">
+    <div className="px-4 py-5 md:px-10 md:py-7">
       <PageHeader
         title="Importar (ferramenta interna)"
         breadcrumb={[{ label: "Início", href: "/dashboard" }, { label: "Importar" }]}

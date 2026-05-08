@@ -81,7 +81,7 @@ export default async function MovimentosPage({ searchParams }: { searchParams: S
   const hasFilters = !!(params.tipo || params.cat || params.forn || params.conta || params.q || params.de || params.ate);
 
   return (
-    <div className="px-10 py-7">
+    <div className="px-4 py-5 md:px-10 md:py-7">
       <PageHeader
         title="Movimentos"
         breadcrumb={[{ label: "Início", href: "/dashboard" }, { label: "Movimentos" }]}

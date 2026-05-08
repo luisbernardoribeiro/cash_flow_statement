@@ -102,7 +102,7 @@ export default async function FluxoMensalPage({ searchParams }: { searchParams: 
   if (!years.includes(year)) years.push(year);
 
   return (
-    <div className="px-10 py-7">
+    <div className="px-4 py-5 md:px-10 md:py-7">
       <PageHeader
         title="Fluxo Mensal"
         breadcrumb={[{ label: "Início", href: "/dashboard" }, { label: "Fluxo Mensal" }]}
