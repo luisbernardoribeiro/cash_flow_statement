@@ -192,27 +192,37 @@ export default async function FluxoMensalPage({ searchParams }: { searchParams: 
               })()}
             </tbody>
             <tfoot>
-              <tr className="border-t-2 border-primary-600 bg-primary-600 text-white">
-                <td className="sticky left-0 z-10 bg-primary-600 px-4 py-3 font-bold">SALDO LÍQUIDO MENSAL</td>
-                <td className="px-3 py-3" />
+              <tr className="border-t-2 border-primary-500/50 bg-primary-500/[0.08] text-white/95">
+                <td className="sticky left-0 z-10 border-t-2 border-primary-500/50 bg-[#15151E] px-4 py-3.5">
+                  <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-primary-400 shadow-[0_0_8px_rgba(120,113,255,0.7)]" aria-hidden="true" />
+                    <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary-300">Saldo Líquido Mensal</span>
+                  </div>
+                </td>
+                <td className="border-t-2 border-primary-500/50 px-3 py-3.5" />
                 {monthTotals.map((v, i) => (
-                  <td key={i} className="px-3 py-3 text-right font-bold tabular-nums whitespace-nowrap">
-                    {v === 0 ? "—" : formatEUR(v).replace(" €", "")}
+                  <td key={i} className="border-t-2 border-primary-500/50 px-3 py-3.5 text-right font-semibold tabular-nums whitespace-nowrap">
+                    {v === 0 ? <span className="text-white/30">—</span> : formatEUR(v).replace(" €", "")}
                   </td>
                 ))}
-                <td className="bg-primary-700 px-3 py-3 text-right font-extrabold tabular-nums">
+                <td className="border-t-2 border-primary-500/50 bg-primary-500/[0.18] px-3 py-3.5 text-right font-extrabold tabular-nums text-white">
                   {formatEUR(monthTotals.reduce((a, b) => a + b, 0))}
                 </td>
               </tr>
-              <tr className="bg-gold-500 text-white">
-                <td className="sticky left-0 z-10 bg-gold-500 px-4 py-3 font-bold">SALDO ACUMULADO</td>
-                <td className="px-3 py-3" />
+              <tr className="border-t border-gold-500/40 bg-gold-500/[0.08] text-white/95">
+                <td className="sticky left-0 z-10 border-t border-gold-500/40 bg-[#15151E] px-4 py-3.5">
+                  <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-gold-500 shadow-[0_0_8px_rgba(200,169,81,0.7)]" aria-hidden="true" />
+                    <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-gold-500">Saldo Acumulado</span>
+                  </div>
+                </td>
+                <td className="border-t border-gold-500/40 px-3 py-3.5" />
                 {acumulado.map((v, i) => (
-                  <td key={i} className="px-3 py-3 text-right font-bold tabular-nums whitespace-nowrap">
+                  <td key={i} className="border-t border-gold-500/40 px-3 py-3.5 text-right font-semibold tabular-nums whitespace-nowrap">
                     {formatEUR(v).replace(" €", "")}
                   </td>
                 ))}
-                <td className="bg-gold-600 px-3 py-3 text-right font-extrabold tabular-nums">
+                <td className="border-t border-gold-500/40 bg-gold-500/[0.18] px-3 py-3.5 text-right font-extrabold tabular-nums text-gold-200">
                   {formatEUR(acumulado[11])}
                 </td>
               </tr>

@@ -18,8 +18,13 @@ export default {
           900: "#15143F",
         },
         gold: {
+          100: "#F8EFD2",
+          200: "#EFDFA5",
+          300: "#E0CA7C",
+          400: "#D6BB66",
           500: "#C8A951",
           600: "#A88B3A",
+          700: "#85702E",
         },
         success: { DEFAULT: "#2E7D32", bg: "#E8F5E9" },
         danger:  { DEFAULT: "#C62828", bg: "#FFEBEE" },
