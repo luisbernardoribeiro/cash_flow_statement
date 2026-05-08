@@ -109,8 +109,8 @@ export default async function FluxoMensalPage({ searchParams }: { searchParams: 
         sub={`Matriz de Categoria × Mês para ${year} · valores em € (saídas negativas)`}
         actions={
           <form className="flex items-center gap-2">
-            <label htmlFor="ano" className="text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Ano</label>
-            <select id="ano" name="ano" defaultValue={String(year)} className="rounded-md border border-[#D5D8DC] bg-white px-3 py-2 text-sm">
+            <label htmlFor="ano" className="text-xs font-bold uppercase tracking-wider text-white/60">Ano</label>
+            <select id="ano" name="ano" defaultValue={String(year)} className="rounded-md border border-white/10 bg-[#15151E] px-3 py-2 text-sm">
               {years.map((y) => <option key={y} value={y}>{y}</option>)}
             </select>
             <button type="submit" className="rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white hover:bg-primary-700">
@@ -121,24 +121,24 @@ export default async function FluxoMensalPage({ searchParams }: { searchParams: 
       />
 
       {visibleCats.length === 0 && !hasNoCat ? (
-        <div className="rounded-2xl border-2 border-dashed border-primary-200 bg-white p-10 text-center">
+        <div className="rounded-2xl border-2 border-dashed border-white/15 bg-[#15151E] p-10 text-center">
           <h3 className="text-xl font-bold">Sem dados em {year}</h3>
-          <p className="mt-2 mb-5 text-sm text-[#4A4A5C]">Não há movimentos registados neste ano.</p>
+          <p className="mt-2 mb-5 text-sm text-white/60">Não há movimentos registados neste ano.</p>
           <Link href="/movimentos/novo" className="btn btn-primary">+ Novo Movimento</Link>
         </div>
       ) : (
-        <div className="overflow-auto rounded-lg border border-[#D5D8DC] bg-white">
+        <div className="overflow-auto rounded-lg border border-white/10 bg-[#15151E]">
           <table className="min-w-full text-sm">
-            <thead className="bg-primary-50/60 sticky top-0">
+            <thead className="bg-white/5 sticky top-0">
               <tr>
-                <th className="sticky left-0 z-10 bg-primary-50/60 px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C] min-w-[220px]">Categoria</th>
-                <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Tipo</th>
+                <th className="sticky left-0 z-10 bg-white/5 px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-white/60 min-w-[220px]">Categoria</th>
+                <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-white/60">Tipo</th>
                 {monthLabels.map((m) => (
-                  <th key={m} className="px-3 py-3 text-right text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">
+                  <th key={m} className="px-3 py-3 text-right text-xs font-bold uppercase tracking-wider text-white/60">
                     {m}/{String(year).slice(-2)}
                   </th>
                 ))}
-                <th className="px-3 py-3 text-right text-xs font-bold uppercase tracking-wider text-primary-600 bg-primary-100/60">Total Ano</th>
+                <th className="px-3 py-3 text-right text-xs font-bold uppercase tracking-wider text-gold-500 bg-white/10">Total Ano</th>
               </tr>
             </thead>
             <tbody>
@@ -147,10 +147,10 @@ export default async function FluxoMensalPage({ searchParams }: { searchParams: 
                 const sign = c.type === "saida" ? -1 : 1;
                 const total = arr.reduce((a, b) => a + b, 0) * sign;
                 return (
-                  <tr key={c.id} className="border-t border-[#D5D8DC] hover:bg-primary-50/30">
-                    <td className="sticky left-0 z-10 bg-white px-4 py-2.5 font-medium">
+                  <tr key={c.id} className="border-t border-white/10 hover:bg-white/5">
+                    <td className="sticky left-0 z-10 bg-[#15151E] px-4 py-2.5 font-medium">
                       <div>{c.name}</div>
-                      {c.group && <div className="text-[10px] text-[#4A4A5C]">{c.group}</div>}
+                      {c.group && <div className="text-[10px] text-white/60">{c.group}</div>}
                     </td>
                     <td className="px-3 py-2.5">
                       <Badge tone={c.type === "entrada" ? "success" : "danger"}>
@@ -159,12 +159,12 @@ export default async function FluxoMensalPage({ searchParams }: { searchParams: 
                     </td>
                     {arr.map((v, i) => (
                       <td key={i} className={`px-3 py-2.5 text-right tabular-nums whitespace-nowrap ${
-                        v === 0 ? "text-[#9AA0A6]" : (sign === -1 ? "text-danger" : "text-success")
+                        v === 0 ? "text-white/40" : (sign === -1 ? "text-rose-400" : "text-emerald-400")
                       }`}>
                         {v === 0 ? "—" : (sign === -1 ? "- " : "+ ") + formatEUR(v).replace(" €", "")}
                       </td>
                     ))}
-                    <td className="bg-primary-50/40 px-3 py-2.5 text-right font-bold tabular-nums whitespace-nowrap">
+                    <td className="bg-white/5 px-3 py-2.5 text-right font-bold tabular-nums whitespace-nowrap">
                       {total === 0 ? "—" : formatEUR(total)}
                     </td>
                   </tr>
@@ -174,17 +174,17 @@ export default async function FluxoMensalPage({ searchParams }: { searchParams: 
                 const arr = matrix.get("__nocat__")!;
                 const total = arr.reduce((a, b) => a + b, 0);
                 return (
-                  <tr className="border-t border-[#D5D8DC] bg-warning-bg/40">
-                    <td className="sticky left-0 z-10 bg-warning-bg/40 px-4 py-2.5 font-medium italic text-[#4A4A5C]">
+                  <tr className="border-t border-white/10 bg-warning-bg/40">
+                    <td className="sticky left-0 z-10 bg-warning-bg/40 px-4 py-2.5 font-medium italic text-white/60">
                       (sem categoria)
                     </td>
-                    <td className="px-3 py-2.5 text-[#4A4A5C]">—</td>
+                    <td className="px-3 py-2.5 text-white/60">—</td>
                     {arr.map((v, i) => (
                       <td key={i} className="px-3 py-2.5 text-right tabular-nums whitespace-nowrap">
                         {v === 0 ? "—" : formatEUR(v).replace(" €", "")}
                       </td>
                     ))}
-                    <td className="bg-primary-50/40 px-3 py-2.5 text-right font-bold tabular-nums">
+                    <td className="bg-white/5 px-3 py-2.5 text-right font-bold tabular-nums">
                       {total === 0 ? "—" : formatEUR(total)}
                     </td>
                   </tr>
@@ -225,6 +225,6 @@ export default async function FluxoMensalPage({ searchParams }: { searchParams: 
 }
 
 function Badge({ children, tone }: { children: React.ReactNode; tone: "success" | "danger" }) {
-  const cls = tone === "success" ? "bg-success-bg text-success" : "bg-danger-bg text-danger";
+  const cls = tone === "success" ? "bg-emerald-500/15 text-emerald-400" : "bg-rose-500/15 text-rose-400";
   return <span className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${cls}`}>{children}</span>;
 }

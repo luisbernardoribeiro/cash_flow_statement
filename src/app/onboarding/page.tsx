@@ -14,7 +14,6 @@ export default async function OnboardingPage({ searchParams }: { searchParams: S
   const user = await requireUser();
   const params = await searchParams;
 
-  // Se já tem empresa, redireciona
   const existing = await db
     .select({ orgId: memberships.orgId })
     .from(memberships)
@@ -24,33 +23,42 @@ export default async function OnboardingPage({ searchParams }: { searchParams: S
   if (existing.length > 0) redirect("/dashboard");
 
   return (
-    <main className="min-h-screen bg-primary-50/30 flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-lg">
+    <main className="relative min-h-screen overflow-hidden bg-[#0A0A0F] flex items-center justify-center px-6 py-12">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-40 -top-40 h-96 w-96 rounded-full bg-primary-500/15 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-40 bottom-0 h-96 w-96 rounded-full bg-gold-500/10 blur-3xl"
+      />
+
+      <div className="relative w-full max-w-lg">
         <Link href="/" className="mb-8 flex items-center gap-3 justify-center" aria-label="MAPA Tesouraria — by GI ADVISE">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/gi-mark.svg" alt="" className="h-10 w-10" />
-          <span className="text-xl font-extrabold tracking-tight text-primary-600">
-            MAPA <span className="font-normal italic text-primary-400">Tesouraria</span>
+          <img src="/brand/gi-mark.svg" alt="" className="h-10 w-10 [filter:brightness(0)_invert(1)]" />
+          <span className="text-xl font-extrabold tracking-tight text-white">
+            MAPA <span className="font-normal italic text-white/70">Tesouraria</span>
           </span>
         </Link>
 
-        <div className="rounded-2xl border border-primary-100 bg-white p-8 shadow-md">
-          <h1 className="text-2xl font-bold mb-2">Bem-vindo ao MAPA 👋</h1>
-          <p className="text-sm text-[#4A4A5C] mb-2">
-            Regista o nome da tua empresa e está feito. A app já vem montada com o método do <strong>Alípio Monteiro CC</strong>:
+        <div className="rounded-2xl border border-white/10 bg-[#15151E] p-8 shadow-xl">
+          <h1 className="text-2xl font-bold mb-2 text-white">Bem-vindo ao MAPA 👋</h1>
+          <p className="text-sm text-white/60 mb-2">
+            Regista o nome da tua empresa e está feito. A app já vem montada com o método do <strong className="text-white/85">Alípio Monteiro CC</strong>:
           </p>
-          <ul className="mb-6 space-y-1 text-sm text-[#4A4A5C]">
-            <li>✓ <strong className="text-ink">20 categorias</strong> — Vendas, Compras, Renda, Vencimentos, Eletricidade…</li>
-            <li>✓ <strong className="text-ink">3 contas</strong> base — Caixa, TPA, Banco</li>
+          <ul className="mb-6 space-y-1 text-sm text-white/60">
+            <li>✓ <strong className="text-white/85">20 categorias</strong> — Vendas, Compras, Renda, Vencimentos, Eletricidade…</li>
+            <li>✓ <strong className="text-white/85">3 contas</strong> base — Caixa, TPA, Banco</li>
             <li>✓ Dashboard, fluxo mensal, relatórios — tudo configurado</li>
           </ul>
-          <p className="mb-6 text-xs text-[#4A4A5C]">
+          <p className="mb-6 text-xs text-white/55">
             <strong>Não precisas de importar nada.</strong> Esta é a tua nova versão do mapa. Logo a seguir registas o primeiro movimento.
           </p>
 
           <form action={createOrganization} className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-xs font-semibold uppercase tracking-wider text-[#4A4A5C] mb-2">
+              <label htmlFor="name" className="block text-xs font-semibold uppercase tracking-wider text-white/55 mb-2">
                 Nome da empresa
               </label>
               <input
@@ -61,13 +69,13 @@ export default async function OnboardingPage({ searchParams }: { searchParams: S
                 autoFocus
                 placeholder="Ex.: Padaria do Bairro, Lda."
                 maxLength={120}
-                className="w-full rounded-md border border-[#D5D8DC] bg-white px-4 py-3 text-base focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20"
+                className="w-full rounded-md border border-white/15 bg-white/5 px-4 py-3 text-base text-white placeholder-white/30 focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
               />
             </div>
 
             <div>
-              <label htmlFor="nif" className="block text-xs font-semibold uppercase tracking-wider text-[#4A4A5C] mb-2">
-                NIF <span className="text-[#9AA0A6] font-normal normal-case tracking-normal">(opcional)</span>
+              <label htmlFor="nif" className="block text-xs font-semibold uppercase tracking-wider text-white/55 mb-2">
+                NIF <span className="text-white/35 font-normal normal-case tracking-normal">(opcional)</span>
               </label>
               <input
                 id="nif"
@@ -77,12 +85,12 @@ export default async function OnboardingPage({ searchParams }: { searchParams: S
                 pattern="[0-9]{9}"
                 placeholder="500000000"
                 maxLength={9}
-                className="w-full rounded-md border border-[#D5D8DC] bg-white px-4 py-3 text-base focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20"
+                className="w-full rounded-md border border-white/15 bg-white/5 px-4 py-3 text-base text-white placeholder-white/30 focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
               />
             </div>
 
             {params.error && (
-              <div className="rounded-md border border-danger/30 bg-danger-bg px-4 py-3 text-sm text-danger">
+              <div className="rounded-md border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
                 Não foi possível criar a empresa. Tenta de novo.
               </div>
             )}
@@ -92,15 +100,15 @@ export default async function OnboardingPage({ searchParams }: { searchParams: S
             </button>
           </form>
 
-          <p className="mt-6 text-xs text-[#4A4A5C]">
+          <p className="mt-6 text-xs text-white/50">
             Ao continuar, aceitas os{" "}
-            <Link href="/termos" className="text-primary-600 underline">termos de uso</Link>{" "}
+            <Link href="/termos" className="text-gold-500 underline">termos de uso</Link>{" "}
             e a{" "}
-            <Link href="/privacidade" className="text-primary-600 underline">política de privacidade</Link>.
+            <Link href="/privacidade" className="text-gold-500 underline">política de privacidade</Link>.
           </p>
         </div>
 
-        <p className="mt-6 text-center text-xs text-[#4A4A5C]">
+        <p className="mt-6 text-center text-xs text-white/55">
           ✓ Aprovado por Contabilista Certificado · CC nº 32897
         </p>
       </div>

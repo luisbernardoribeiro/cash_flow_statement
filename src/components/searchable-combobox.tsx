@@ -149,15 +149,15 @@ export function SearchableCombobox({
           type="button"
           onClick={() => { setOpen(true); setTimeout(() => inputRef.current?.focus(), 0); }}
           className={cn(
-            "flex w-full items-center justify-between rounded-md border border-[#D5D8DC] bg-white px-4 py-2.5 text-left text-base focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20",
-            !selected && "text-[#9AA0A6]",
+            "flex w-full items-center justify-between rounded-md border border-white/10 bg-[#15151E] px-4 py-2.5 text-left text-base focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20",
+            !selected && "text-white/40",
           )}
         >
           <span className="truncate">
             {selected?.label ?? emptyLabel}
-            {selected?.group && <span className="ml-2 text-xs text-[#4A4A5C]">({selected.group})</span>}
+            {selected?.group && <span className="ml-2 text-xs text-white/60">({selected.group})</span>}
           </span>
-          <span className="ml-2 shrink-0 text-[#9AA0A6]">▾</span>
+          <span className="ml-2 shrink-0 text-white/40">▾</span>
         </button>
       ) : (
         // Aberto: mostra o input de pesquisa
@@ -169,25 +169,25 @@ export function SearchableCombobox({
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="w-full rounded-md border border-primary-600 bg-white px-4 py-2.5 text-base ring-2 ring-primary-600/20 focus:outline-none"
+          className="w-full rounded-md border border-primary-600 bg-[#15151E] px-4 py-2.5 text-base ring-2 ring-primary-600/20 focus:outline-none"
         />
       )}
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute left-0 right-0 top-full z-30 mt-1 max-h-72 overflow-y-auto rounded-md border border-[#D5D8DC] bg-white shadow-lg">
+        <div className="absolute left-0 right-0 top-full z-30 mt-1 max-h-72 overflow-y-auto rounded-md border border-white/10 bg-[#15151E] shadow-lg">
           {allowEmpty && !query && (
             <button
               type="button"
               onClick={clearSelection}
-              className="block w-full px-4 py-2 text-left text-sm italic text-[#9AA0A6] hover:bg-primary-50"
+              className="block w-full px-4 py-2 text-left text-sm italic text-white/40 hover:bg-white/5"
             >
               {emptyLabel}
             </button>
           )}
 
           {filtered.length === 0 && !showCreateOption && (
-            <div className="px-4 py-3 text-sm text-[#9AA0A6]">Sem resultados.</div>
+            <div className="px-4 py-3 text-sm text-white/40">Sem resultados.</div>
           )}
 
           {(() => {
@@ -203,7 +203,7 @@ export function SearchableCombobox({
             return entries.map(([groupName, items]) => (
               <div key={groupName || "_"}>
                 {groupName && (
-                  <div className="bg-bg-soft/60 px-4 py-1 text-[10px] font-bold uppercase tracking-wider text-[#4A4A5C]">
+                  <div className="bg-bg-soft/60 px-4 py-1 text-[10px] font-bold uppercase tracking-wider text-white/60">
                     {groupName}
                   </div>
                 )}
@@ -218,7 +218,7 @@ export function SearchableCombobox({
                       onMouseEnter={() => setActiveIndex(idx)}
                       className={cn(
                         "block w-full px-4 py-2 text-left text-sm",
-                        active ? "bg-primary-50 text-primary-700" : "hover:bg-primary-50/60",
+                        active ? "bg-white/10 text-white" : "hover:bg-white/5",
                       )}
                     >
                       {o.label}
@@ -236,10 +236,10 @@ export function SearchableCombobox({
               disabled={isPending}
               onMouseEnter={() => setActiveIndex(filtered.length)}
               className={cn(
-                "block w-full border-t border-[#D5D8DC] px-4 py-2.5 text-left text-sm font-semibold",
+                "block w-full border-t border-white/10 px-4 py-2.5 text-left text-sm font-semibold",
                 activeIndex === filtered.length
                   ? "bg-gold-500/10 text-gold-600"
-                  : "text-primary-600 hover:bg-primary-50",
+                  : "text-gold-500 hover:bg-white/5",
                 isPending && "opacity-50",
               )}
             >
@@ -253,7 +253,7 @@ export function SearchableCombobox({
         </div>
       )}
 
-      {error && <p className="mt-1 text-xs text-danger">{error}</p>}
+      {error && <p className="mt-1 text-xs text-rose-400">{error}</p>}
     </div>
   );
 }

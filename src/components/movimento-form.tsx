@@ -69,11 +69,11 @@ export function MovimentoForm({
   };
 
   return (
-    <form action={action} className="max-w-2xl space-y-5 rounded-2xl border border-[#D5D8DC] bg-white p-5 shadow-sm md:p-7">
+    <form action={action} className="max-w-2xl space-y-5 rounded-2xl border border-white/10 bg-[#15151E] p-5 shadow-sm md:p-7">
       {defaults.id && <input type="hidden" name="id" value={defaults.id} />}
 
       {errorCode === "invalid" && (
-        <div className="rounded-md border border-danger/30 bg-danger-bg px-4 py-3 text-sm text-danger">
+        <div className="rounded-md border border-danger/30 bg-rose-500/15 px-4 py-3 text-sm text-rose-400">
           Verifica os campos — alguns dados são inválidos.
         </div>
       )}
@@ -83,7 +83,7 @@ export function MovimentoForm({
           <input
             name="date" type="date" required
             defaultValue={defaults.date ?? new Date().toISOString().slice(0, 10)}
-            className="w-full rounded-md border border-[#D5D8DC] bg-white px-4 py-2.5 text-base focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20"
+            className="w-full rounded-md border border-white/10 bg-[#15151E] px-4 py-2.5 text-base focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
           />
         </Field>
         <Field label="Tipo" required>
@@ -91,7 +91,7 @@ export function MovimentoForm({
             name="type" required
             value={type}
             onChange={(e) => setType(e.target.value as "entrada" | "saida")}
-            className="w-full rounded-md border border-[#D5D8DC] bg-white px-4 py-2.5 text-base focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20"
+            className="w-full rounded-md border border-white/10 bg-[#15151E] px-4 py-2.5 text-base focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
           >
             <option value="entrada">Entrada</option>
             <option value="saida">Saída</option>
@@ -104,7 +104,7 @@ export function MovimentoForm({
           name="description" type="text" required maxLength={500}
           defaultValue={defaults.description ?? ""}
           placeholder="Ex.: Vendas Diárias - Loja 1"
-          className="w-full rounded-md border border-[#D5D8DC] bg-white px-4 py-2.5 text-base focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20"
+          className="w-full rounded-md border border-white/10 bg-[#15151E] px-4 py-2.5 text-base focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
         />
       </Field>
 
@@ -113,9 +113,9 @@ export function MovimentoForm({
           name="amount" type="text" required inputMode="decimal" pattern="[0-9.,]*"
           defaultValue={defaults.amount ?? ""}
           placeholder="0,00"
-          className="w-full rounded-md border border-[#D5D8DC] bg-white px-4 py-2.5 text-base focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20"
+          className="w-full rounded-md border border-white/10 bg-[#15151E] px-4 py-2.5 text-base focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
         />
-        <p className="mt-1 text-xs text-[#4A4A5C]">Usa vírgula ou ponto como separador decimal.</p>
+        <p className="mt-1 text-xs text-white/60">Usa vírgula ou ponto como separador decimal.</p>
       </Field>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -129,7 +129,7 @@ export function MovimentoForm({
             createLabel="+ Nova categoria"
             onCreate={handleCreateCategory}
           />
-          <p className="mt-1 text-xs text-[#4A4A5C]">
+          <p className="mt-1 text-xs text-white/60">
             Procura ou escreve uma nova — cria-se automaticamente como tipo &quot;{type}&quot;.
           </p>
         </Field>
@@ -143,7 +143,7 @@ export function MovimentoForm({
             createLabel="+ Novo fornecedor"
             onCreate={handleCreateSupplier}
           />
-          <p className="mt-1 text-xs text-[#4A4A5C]">
+          <p className="mt-1 text-xs text-white/60">
             Procura ou escreve um novo — pode adicionar NIF/email depois em /fornecedores.
           </p>
         </Field>
@@ -153,7 +153,7 @@ export function MovimentoForm({
         <select
           name="accountId" required
           defaultValue={defaults.accountId ?? accs[0]?.id ?? ""}
-          className="w-full rounded-md border border-[#D5D8DC] bg-white px-4 py-2.5 text-base focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20"
+          className="w-full rounded-md border border-white/10 bg-[#15151E] px-4 py-2.5 text-base focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
         >
           {accs.map((a) => (
             <option key={a.id} value={a.id}>{a.name} ({a.type})</option>
@@ -166,11 +166,11 @@ export function MovimentoForm({
           name="notes" rows={3} maxLength={1000}
           defaultValue={defaults.notes ?? ""}
           placeholder="Detalhes adicionais (opcional)"
-          className="w-full rounded-md border border-[#D5D8DC] bg-white px-4 py-2.5 text-base focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20"
+          className="w-full rounded-md border border-white/10 bg-[#15151E] px-4 py-2.5 text-base focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
         />
       </Field>
 
-      <div className="flex flex-wrap justify-between gap-3 border-t border-[#D5D8DC] pt-5">
+      <div className="flex flex-wrap justify-between gap-3 border-t border-white/10 pt-5">
         <Link href={cancelHref} className="btn btn-ghost">Cancelar</Link>
         <button type="submit" className="btn btn-primary">{submitLabel}</button>
       </div>
@@ -181,8 +181,8 @@ export function MovimentoForm({
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <div>
-      <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">
-        {label} {required && <span className="text-danger">*</span>}
+      <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-white/60">
+        {label} {required && <span className="text-rose-400">*</span>}
       </label>
       {children}
     </div>

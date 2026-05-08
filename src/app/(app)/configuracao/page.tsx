@@ -33,13 +33,13 @@ export default async function ConfiguracaoPage({ searchParams }: { searchParams:
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Empresa */}
-        <div className="rounded-2xl border border-[#D5D8DC] bg-white p-7 shadow-sm">
+        <div className="rounded-2xl border border-white/10 bg-[#15151E] p-7 shadow-sm">
           <div className="mb-5 flex items-start justify-between">
             <div>
               <h3 className="text-lg font-bold">Empresa</h3>
-              <p className="text-sm text-[#4A4A5C]">Dados visíveis em relatórios e na sidebar.</p>
+              <p className="text-sm text-white/60">Dados visíveis em relatórios e na sidebar.</p>
             </div>
-            <span className="rounded-full bg-primary-50 px-3 py-1 text-xs font-semibold text-primary-700 capitalize">
+            <span className="rounded-full bg-white/5 px-3 py-1 text-xs font-semibold text-white/85 capitalize">
               {org.plan}
             </span>
           </div>
@@ -48,45 +48,45 @@ export default async function ConfiguracaoPage({ searchParams }: { searchParams:
             <Field label="Nome" required>
               <input name="name" type="text" required maxLength={120} defaultValue={org.name}
                 disabled={ctx.role !== "owner" && ctx.role !== "admin"}
-                className="w-full rounded-md border border-[#D5D8DC] bg-white px-3 py-2.5 text-base disabled:bg-bg-soft disabled:text-[#9AA0A6] focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20" />
+                className="w-full rounded-md border border-white/10 bg-[#15151E] px-3 py-2.5 text-base disabled:bg-bg-soft disabled:text-white/40 focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20" />
             </Field>
             <Field label="NIF">
               <input name="nif" type="text" inputMode="numeric" pattern="[0-9]{9}" maxLength={9}
                 defaultValue={org.nif ?? ""} placeholder="500000000"
                 disabled={ctx.role !== "owner" && ctx.role !== "admin"}
-                className="w-full rounded-md border border-[#D5D8DC] bg-white px-3 py-2.5 text-base disabled:bg-bg-soft disabled:text-[#9AA0A6] focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20" />
+                className="w-full rounded-md border border-white/10 bg-[#15151E] px-3 py-2.5 text-base disabled:bg-bg-soft disabled:text-white/40 focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20" />
             </Field>
             <Field label="Empresa criada em">
-              <p className="text-sm text-[#4A4A5C]">{new Date(org.createdAt).toLocaleString("pt-PT")}</p>
+              <p className="text-sm text-white/60">{new Date(org.createdAt).toLocaleString("pt-PT")}</p>
             </Field>
 
             {(ctx.role === "owner" || ctx.role === "admin") ? (
               <button type="submit" className="btn btn-primary text-sm">Guardar alterações</button>
             ) : (
-              <p className="text-xs italic text-[#4A4A5C]">Só Owner/Admin podem editar a empresa.</p>
+              <p className="text-xs italic text-white/60">Só Owner/Admin podem editar a empresa.</p>
             )}
           </form>
         </div>
 
         {/* Utilizador */}
-        <div className="rounded-2xl border border-[#D5D8DC] bg-white p-7 shadow-sm">
+        <div className="rounded-2xl border border-white/10 bg-[#15151E] p-7 shadow-sm">
           <div className="mb-5">
             <h3 className="text-lg font-bold">O teu perfil</h3>
-            <p className="text-sm text-[#4A4A5C]">Como apareces na app.</p>
+            <p className="text-sm text-white/60">Como apareces na app.</p>
           </div>
 
           <form action={updateUserName} className="space-y-4">
             <Field label="Nome">
               <input name="name" type="text" maxLength={80} defaultValue={user?.name ?? ""}
                 placeholder="O teu nome"
-                className="w-full rounded-md border border-[#D5D8DC] bg-white px-3 py-2.5 text-base focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20" />
+                className="w-full rounded-md border border-white/10 bg-[#15151E] px-3 py-2.5 text-base focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20" />
             </Field>
             <Field label="Email">
-              <p className="text-sm text-[#4A4A5C]">{user?.email}</p>
-              <p className="mt-1 text-[11px] text-[#9AA0A6]">Para mudar o email, contacta o suporte.</p>
+              <p className="text-sm text-white/60">{user?.email}</p>
+              <p className="mt-1 text-[11px] text-white/40">Para mudar o email, contacta o suporte.</p>
             </Field>
             <Field label="Função na empresa">
-              <span className="inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-semibold text-primary-700 capitalize">
+              <span className="inline-block rounded-full bg-white/5 px-3 py-1 text-xs font-semibold text-white/85 capitalize">
                 {ctx.role}
               </span>
             </Field>
@@ -97,10 +97,10 @@ export default async function ConfiguracaoPage({ searchParams }: { searchParams:
 
       <div className="mt-6 rounded-2xl border border-warning/30 bg-warning-bg/40 p-6">
         <h3 className="mb-2 text-base font-bold text-warning">Zona de atenção</h3>
-        <p className="text-sm text-[#4A4A5C]">Apagar a empresa elimina permanentemente todos os movimentos, categorias, fornecedores e contas. Esta operação está temporariamente desativada — contacta o suporte se precisares.</p>
+        <p className="text-sm text-white/60">Apagar a empresa elimina permanentemente todos os movimentos, categorias, fornecedores e contas. Esta operação está temporariamente desativada — contacta o suporte se precisares.</p>
       </div>
 
-      <p className="mt-12 text-center text-xs text-[#4A4A5C]">
+      <p className="mt-12 text-center text-xs text-white/60">
         ✓ Aprovado por Contabilista Certificado · Alípio Monteiro · CC nº 32897
       </p>
     </div>
@@ -110,8 +110,8 @@ export default async function ConfiguracaoPage({ searchParams }: { searchParams:
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <div>
-      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">
-        {label} {required && <span className="text-danger">*</span>}
+      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-white/60">
+        {label} {required && <span className="text-rose-400">*</span>}
       </label>
       {children}
     </div>
@@ -128,6 +128,6 @@ function Toast({ type }: { type?: string }) {
   };
   const m = messages[type];
   if (!m) return null;
-  const cls = m.tone === "success" ? "border-success/30 bg-success-bg text-success" : "border-danger/30 bg-danger-bg text-danger";
+  const cls = m.tone === "success" ? "border-success/30 bg-emerald-500/15 text-emerald-400" : "border-danger/30 bg-rose-500/15 text-rose-400";
   return <div className={`mb-4 rounded-md border ${cls} px-4 py-2.5 text-sm font-medium`}>{m.text}</div>;
 }

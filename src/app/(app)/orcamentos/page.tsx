@@ -120,13 +120,13 @@ export default async function OrcamentosPage({ searchParams }: { searchParams: S
       <Toast type={params.ok || params.error} />
 
       {/* Seletor de período + ações rápidas */}
-      <div className="mb-5 flex flex-wrap items-center gap-3 rounded-lg border border-[#D5D8DC] bg-white p-3.5">
+      <div className="mb-5 flex flex-wrap items-center gap-3 rounded-lg border border-white/10 bg-[#15151E] p-3.5">
         <form method="get" className="flex flex-wrap items-center gap-2">
-          <label className="text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">Período</label>
-          <select name="month" defaultValue={String(month)} className="rounded-md border border-[#D5D8DC] bg-white px-3 py-2 text-sm">
+          <label className="text-xs font-bold uppercase tracking-wider text-white/60">Período</label>
+          <select name="month" defaultValue={String(month)} className="rounded-md border border-white/10 bg-[#15151E] px-3 py-2 text-sm">
             {MONTH_NAMES.map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
           </select>
-          <select name="year" defaultValue={String(year)} className="rounded-md border border-[#D5D8DC] bg-white px-3 py-2 text-sm">
+          <select name="year" defaultValue={String(year)} className="rounded-md border border-white/10 bg-[#15151E] px-3 py-2 text-sm">
             {yearOptions.map((y) => <option key={y} value={y}>{y}</option>)}
           </select>
           <button type="submit" className="rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white hover:bg-primary-700">
@@ -138,7 +138,7 @@ export default async function OrcamentosPage({ searchParams }: { searchParams: S
           <form action={copyFromPrevious}>
             <input type="hidden" name="year" value={year} />
             <input type="hidden" name="month" value={month} />
-            <button type="submit" className="rounded-md border border-[#D5D8DC] bg-white px-3 py-2 text-xs font-semibold text-[#4A4A5C] hover:bg-primary-50">
+            <button type="submit" className="rounded-md border border-white/10 bg-[#15151E] px-3 py-2 text-xs font-semibold text-white/60 hover:bg-white/5">
               Copiar do mês anterior
             </button>
           </form>
@@ -147,14 +147,14 @@ export default async function OrcamentosPage({ searchParams }: { searchParams: S
               <form action={applyToAllMonths}>
                 <input type="hidden" name="year" value={year} />
                 <input type="hidden" name="month" value={month} />
-                <button type="submit" className="rounded-md border border-[#D5D8DC] bg-white px-3 py-2 text-xs font-semibold text-[#4A4A5C] hover:bg-primary-50">
+                <button type="submit" className="rounded-md border border-white/10 bg-[#15151E] px-3 py-2 text-xs font-semibold text-white/60 hover:bg-white/5">
                   Aplicar a todo o ano {year}
                 </button>
               </form>
               <form action={clearBudgets}>
                 <input type="hidden" name="year" value={year} />
                 <input type="hidden" name="month" value={month} />
-                <button type="submit" className="rounded-md border border-danger/30 bg-white px-3 py-2 text-xs font-semibold text-danger hover:bg-danger-bg">
+                <button type="submit" className="rounded-md border border-danger/30 bg-[#15151E] px-3 py-2 text-xs font-semibold text-rose-400 hover:bg-rose-500/15">
                   Apagar orçamento
                 </button>
               </form>
@@ -209,9 +209,9 @@ export default async function OrcamentosPage({ searchParams }: { searchParams: S
           />
         </Section>
 
-        <div className="sticky bottom-0 -mx-10 border-t border-[#D5D8DC] bg-white/95 px-10 py-4 backdrop-blur">
+        <div className="sticky bottom-0 -mx-10 border-t border-white/10 bg-[#15151E]/95 px-10 py-4 backdrop-blur">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-[#4A4A5C]">
+            <p className="text-sm text-white/60">
               📅 A editar o orçamento de <strong>{MONTH_NAMES[month - 1]} {year}</strong>
             </p>
             <button type="submit" className="btn btn-primary">
@@ -221,7 +221,7 @@ export default async function OrcamentosPage({ searchParams }: { searchParams: S
         </div>
       </form>
 
-      <p className="mt-12 text-center text-xs text-[#4A4A5C]">
+      <p className="mt-12 text-center text-xs text-white/60">
         ✓ Aprovado por Contabilista Certificado · Alípio Monteiro · CC nº 32897
       </p>
     </div>
@@ -234,12 +234,12 @@ function Section({
   title: string; subtitle?: string; tone: "success" | "danger";
   children: React.ReactNode;
 }) {
-  const accent = tone === "success" ? "text-success" : "text-danger";
+  const accent = tone === "success" ? "text-emerald-400" : "text-rose-400";
   return (
-    <div className="overflow-hidden rounded-lg border border-[#D5D8DC] bg-white">
-      <div className="border-b border-[#D5D8DC] bg-primary-50/40 px-5 py-3">
+    <div className="overflow-hidden rounded-lg border border-white/10 bg-[#15151E]">
+      <div className="border-b border-white/10 bg-white/5 px-5 py-3">
         <h3 className={`text-sm font-bold uppercase tracking-wider ${accent}`}>{title}</h3>
-        {subtitle && <p className="text-xs text-[#4A4A5C]">{subtitle}</p>}
+        {subtitle && <p className="text-xs text-white/60">{subtitle}</p>}
       </div>
       {children}
     </div>
@@ -257,7 +257,7 @@ function BudgetTable({
   return (
     <>
       {/* Mobile: lista de cards */}
-      <ul className="divide-y divide-[#D5D8DC] md:hidden">
+      <ul className="divide-y divide-white/10 md:hidden">
         {cats.map((c) => {
           const planned  = budgetMap.get(c.id) ?? 0;
           const realized = realizedMap.get(c.id) ?? 0;
@@ -266,11 +266,11 @@ function BudgetTable({
           const isOver = tone === "danger" ? variance < 0 : variance > 0;
 
           return (
-            <li key={c.id} className="px-4 py-3 hover:bg-primary-50/20">
+            <li key={c.id} className="px-4 py-3 hover:bg-white/5">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="font-medium">{c.name}</div>
-                  {c.group && <div className="text-xs text-[#4A4A5C]">{c.group}</div>}
+                  {c.group && <div className="text-xs text-white/60">{c.group}</div>}
                 </div>
                 <div className="flex shrink-0 items-center gap-1">
                   <input
@@ -280,21 +280,21 @@ function BudgetTable({
                     name={`budget_${c.id}`}
                     defaultValue={planned > 0 ? planned.toFixed(2).replace(".", ",") : ""}
                     placeholder="0,00"
-                    className="w-24 rounded-md border border-[#D5D8DC] bg-white px-2 py-1.5 text-right text-sm tabular-nums focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-600/30"
+                    className="w-24 rounded-md border border-white/10 bg-[#15151E] px-2 py-1.5 text-right text-sm tabular-nums focus:border-gold-500/60 focus:outline-none focus:ring-1 focus:ring-primary-600/30"
                   />
-                  <span className="text-xs text-[#4A4A5C]">€</span>
+                  <span className="text-xs text-white/60">€</span>
                 </div>
               </div>
               {planned > 0 && (
                 <div className="mt-2 flex items-center justify-between gap-3 text-xs">
                   <div className="flex flex-1 items-center gap-2">
-                    <span className="text-[#4A4A5C]">Real:</span>
+                    <span className="text-white/60">Real:</span>
                     <span className="tabular-nums">{formatEUR(realized)}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <UsageBar pct={pct} tone={tone} />
                   </div>
-                  <span className={`tabular-nums font-semibold ${isOver ? "text-danger" : "text-success"}`}>
+                  <span className={`tabular-nums font-semibold ${isOver ? "text-rose-400" : "text-emerald-400"}`}>
                     {variance >= 0 ? "+" : "-"}{formatEUR(Math.abs(variance)).replace(" €", "")} €
                   </span>
                 </div>
@@ -303,8 +303,8 @@ function BudgetTable({
           );
         })}
         {cats.length === 0 && (
-          <li className="px-4 py-6 text-center text-sm text-[#4A4A5C]">
-            Sem categorias deste tipo. <Link href="/categorias" className="text-primary-600 underline">Criar uma</Link>.
+          <li className="px-4 py-6 text-center text-sm text-white/60">
+            Sem categorias deste tipo. <Link href="/categorias" className="text-gold-500 underline">Criar uma</Link>.
           </li>
         )}
       </ul>
@@ -330,9 +330,9 @@ function BudgetTable({
             const isOver = tone === "danger" ? variance < 0 : variance > 0;
 
             return (
-              <tr key={c.id} className="border-t border-[#D5D8DC] hover:bg-primary-50/20">
+              <tr key={c.id} className="border-t border-white/10 hover:bg-white/5">
                 <td className="px-4 py-2.5 font-medium">{c.name}</td>
-                <td className="px-4 py-2.5 text-[#4A4A5C]">{c.group ?? "—"}</td>
+                <td className="px-4 py-2.5 text-white/60">{c.group ?? "—"}</td>
                 <td className="px-4 py-2.5">
                   <div className="flex items-center justify-end gap-1">
                     <input
@@ -342,17 +342,17 @@ function BudgetTable({
                       name={`budget_${c.id}`}
                       defaultValue={planned > 0 ? planned.toFixed(2).replace(".", ",") : ""}
                       placeholder="0,00"
-                      className="w-28 rounded-md border border-[#D5D8DC] bg-white px-2 py-1 text-right text-sm tabular-nums focus:border-primary-600 focus:outline-none focus:ring-1 focus:ring-primary-600/30"
+                      className="w-28 rounded-md border border-white/10 bg-[#15151E] px-2 py-1 text-right text-sm tabular-nums focus:border-gold-500/60 focus:outline-none focus:ring-1 focus:ring-primary-600/30"
                     />
-                    <span className="text-xs text-[#4A4A5C]">€</span>
+                    <span className="text-xs text-white/60">€</span>
                   </div>
                 </td>
-                <td className={`px-4 py-2.5 text-right tabular-nums ${realized > 0 ? "" : "text-[#9AA0A6]"}`}>
+                <td className={`px-4 py-2.5 text-right tabular-nums ${realized > 0 ? "" : "text-white/40"}`}>
                   {realized > 0 ? formatEUR(realized) : "—"}
                 </td>
                 <td className={`px-4 py-2.5 text-right tabular-nums font-semibold ${
-                  planned === 0 ? "text-[#9AA0A6]" :
-                  isOver ? "text-danger" : "text-success"
+                  planned === 0 ? "text-white/40" :
+                  isOver ? "text-rose-400" : "text-emerald-400"
                 }`}>
                   {planned === 0 ? "—" : (variance >= 0 ? "+ " : "- ") + formatEUR(Math.abs(variance))}
                 </td>
@@ -360,7 +360,7 @@ function BudgetTable({
                   {planned > 0 ? (
                     <UsageBar pct={pct} tone={tone} />
                   ) : (
-                    <span className="block text-right text-[#9AA0A6]">—</span>
+                    <span className="block text-right text-white/40">—</span>
                   )}
                 </td>
               </tr>
@@ -368,8 +368,8 @@ function BudgetTable({
           })}
           {cats.length === 0 && (
             <tr>
-              <td colSpan={6} className="px-4 py-6 text-center text-sm text-[#4A4A5C]">
-                Sem categorias deste tipo. <Link href="/categorias" className="text-primary-600 underline">Criar uma</Link>.
+              <td colSpan={6} className="px-4 py-6 text-center text-sm text-white/60">
+                Sem categorias deste tipo. <Link href="/categorias" className="text-gold-500 underline">Criar uma</Link>.
               </td>
             </tr>
           )}
@@ -381,7 +381,7 @@ function BudgetTable({
 
 function Th({ children, align }: { children: React.ReactNode; align?: "right" }) {
   return (
-    <th className={`px-4 py-2.5 text-${align ?? "left"} text-[10px] font-bold uppercase tracking-wider text-[#4A4A5C]`}>
+    <th className={`px-4 py-2.5 text-${align ?? "left"} text-[10px] font-bold uppercase tracking-wider text-white/60`}>
       {children}
     </th>
   );
@@ -409,7 +409,7 @@ function UsageBar({ pct, tone }: { pct: number; tone: "success" | "danger" }) {
         />
       </div>
       <span className={`min-w-[3rem] text-right text-xs font-semibold tabular-nums ${
-        pct > 100 ? "text-danger" : "text-[#4A4A5C]"
+        pct > 100 ? "text-rose-400" : "text-white/60"
       }`}>
         {pct}%
       </span>
@@ -426,17 +426,17 @@ function SummaryCard({
   tone: "success" | "danger" | "primary";
 }) {
   const colorPlanned =
-    tone === "success" ? "text-success" :
-    tone === "danger"  ? "text-danger"  :
-                         "text-primary-600";
+    tone === "success" ? "text-emerald-400" :
+    tone === "danger"  ? "text-rose-400"  :
+                         "text-white";
   return (
-    <div className="rounded-lg border border-[#D5D8DC] bg-white p-4">
-      <div className="text-[11px] font-bold uppercase tracking-wider text-[#4A4A5C]">{label}</div>
+    <div className="rounded-lg border border-white/10 bg-[#15151E] p-4">
+      <div className="text-[11px] font-bold uppercase tracking-wider text-white/60">{label}</div>
       <div className={`mt-1 text-2xl font-extrabold tabular-nums ${colorPlanned}`}>
         {formatEUR(planned)}
       </div>
-      <div className="mt-1 text-xs text-[#4A4A5C]">
-        Realizado: <strong className="tabular-nums text-ink">{formatEUR(realized)}</strong>
+      <div className="mt-1 text-xs text-white/60">
+        Realizado: <strong className="tabular-nums text-white">{formatEUR(realized)}</strong>
       </div>
     </div>
   );
@@ -456,7 +456,7 @@ function Toast({ type }: { type?: string }) {
   const m = messages[type];
   if (!m) return null;
   const cls = m.tone === "success"
-    ? "border-success/30 bg-success-bg text-success"
-    : "border-danger/30 bg-danger-bg text-danger";
+    ? "border-success/30 bg-emerald-500/15 text-emerald-400"
+    : "border-danger/30 bg-rose-500/15 text-rose-400";
   return <div className={`mb-4 rounded-md border ${cls} px-4 py-2.5 text-sm font-medium`}>{m.text}</div>;
 }

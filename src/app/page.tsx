@@ -73,15 +73,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="sobre" className="px-6 py-20 lg:py-24">
+      <section id="sobre" className="bg-[#0A0A0F] px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-5xl">
-          <div
-            className="grid items-center gap-10 rounded-3xl p-10 md:p-14 lg:grid-cols-[auto_1fr]"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--tw-gradient-stops)), #fff",
-            }}
-          >
+          <div className="grid items-center gap-10 rounded-3xl border border-white/10 bg-[#15151E] p-10 md:p-14 lg:grid-cols-[auto_1fr]">
             <AvatarFallback
               src="/alipio.jpg"
               alt="Alípio Monteiro — Contabilista Certificado nº 32897"
@@ -89,12 +83,12 @@ export default function HomePage() {
               size={180}
             />
             <div>
-              <h3 className="text-2xl font-bold lg:text-3xl">Alípio Monteiro</h3>
-              <p className="mt-2 text-sm text-[#4A4A5C] lg:text-base">
+              <h3 className="text-2xl font-bold text-white lg:text-3xl">Alípio Monteiro</h3>
+              <p className="mt-2 text-sm text-white/60 lg:text-base">
                 Contabilista Certificado nº {CC_NUMBER} · Auditor Interno IPAI nº 3330 ·
                 Member, Institute of Internal Audit (IIA)
               </p>
-              <blockquote className="mt-5 border-l-4 border-gold-500 pl-5 text-lg italic text-ink lg:text-xl">
+              <blockquote className="mt-5 border-l-4 border-gold-500 pl-5 text-lg italic text-white/85 lg:text-xl">
                 Em mais de 40 anos de carteira, vi o mesmo erro repetir-se: empresários
                 inteligentes a tomar decisões sem saber o saldo real. O MAPA é a
                 ferramenta que sempre quis dar aos meus clientes. Agora damos a todos.
@@ -104,7 +98,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="bg-ink py-12 text-white/85">
+      <footer className="bg-[#08071A] py-12 text-white/85">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-sm">

@@ -99,29 +99,29 @@ export default async function MovimentosPage({ searchParams }: { searchParams: S
         <EmptyState hasFilters={hasFilters} />
       ) : (
         <>
-          <div className="overflow-hidden rounded-lg border border-[#D5D8DC] bg-white">
+          <div className="overflow-hidden rounded-lg border border-white/10 bg-[#15151E]">
             {/* Mobile: lista de cards */}
-            <ul className="divide-y divide-[#D5D8DC] md:hidden">
+            <ul className="divide-y divide-white/10 md:hidden">
               {rows.map((r) => {
                 const isIn = r.type === "entrada";
                 return (
                   <li key={r.id}>
-                    <Link href={`/movimentos/${r.id}`} className="block px-4 py-3 hover:bg-primary-50/30">
+                    <Link href={`/movimentos/${r.id}`} className="block px-4 py-3 hover:bg-white/5">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
                             <Badge tone={isIn ? "success" : "danger"}>{isIn ? "Entrada" : "Saída"}</Badge>
-                            <span className="text-xs text-[#4A4A5C] whitespace-nowrap">{formatDate(r.date)}</span>
+                            <span className="text-xs text-white/60 whitespace-nowrap">{formatDate(r.date)}</span>
                           </div>
                           <div className="mt-1 line-clamp-2 font-medium leading-snug">{r.description}</div>
-                          <div className="mt-1 truncate text-xs text-[#4A4A5C]">
+                          <div className="mt-1 truncate text-xs text-white/60">
                             {r.categoryName ?? "—"}
                             {r.supplierName && <> · {r.supplierName}</>}
                             {r.accountName && <> · {r.accountName}</>}
                           </div>
                         </div>
                         <div className={`shrink-0 text-right font-bold tabular-nums whitespace-nowrap ${
-                          isIn ? "text-success" : "text-danger"
+                          isIn ? "text-emerald-400" : "text-rose-400"
                         }`}>
                           {isIn ? "+ " : "- "}{formatEUR(Number(r.amount))}
                         </div>
@@ -134,7 +134,7 @@ export default async function MovimentosPage({ searchParams }: { searchParams: S
 
             {/* Desktop: tabela */}
             <table className="hidden w-full text-sm md:table">
-              <thead className="bg-primary-50/60">
+              <thead className="bg-white/5">
                 <tr>
                   <Th>Data</Th>
                   <Th>Tipo</Th>
@@ -147,7 +147,7 @@ export default async function MovimentosPage({ searchParams }: { searchParams: S
               </thead>
               <tbody>
                 {rows.map((r) => (
-                  <tr key={r.id} className="border-t border-[#D5D8DC] hover:bg-primary-50/30 cursor-pointer">
+                  <tr key={r.id} className="border-t border-white/10 hover:bg-white/5 cursor-pointer">
                     <td className="px-4 py-3.5 whitespace-nowrap">
                       <Link href={`/movimentos/${r.id}`} className="block">{formatDate(r.date)}</Link>
                     </td>
@@ -159,13 +159,13 @@ export default async function MovimentosPage({ searchParams }: { searchParams: S
                       </Link>
                     </td>
                     <td className="px-4 py-3.5">
-                      <Link href={`/movimentos/${r.id}`} className="block hover:text-primary-600">{r.description}</Link>
+                      <Link href={`/movimentos/${r.id}`} className="block hover:text-gold-500">{r.description}</Link>
                     </td>
-                    <td className="px-4 py-3.5 text-[#4A4A5C]">{r.categoryName ?? "—"}</td>
-                    <td className="px-4 py-3.5 text-[#4A4A5C]">{r.supplierName ?? "—"}</td>
-                    <td className="px-4 py-3.5 text-[#4A4A5C]">{r.accountName ?? "—"}</td>
+                    <td className="px-4 py-3.5 text-white/60">{r.categoryName ?? "—"}</td>
+                    <td className="px-4 py-3.5 text-white/60">{r.supplierName ?? "—"}</td>
+                    <td className="px-4 py-3.5 text-white/60">{r.accountName ?? "—"}</td>
                     <td className={`px-4 py-3.5 text-right font-bold tabular-nums whitespace-nowrap ${
-                      r.type === "entrada" ? "text-success" : "text-danger"
+                      r.type === "entrada" ? "text-emerald-400" : "text-rose-400"
                     }`}>
                       <Link href={`/movimentos/${r.id}`} className="block">
                         {r.type === "entrada" ? "+ " : "- "}{formatEUR(Number(r.amount))}
@@ -195,7 +195,7 @@ function FiltersBar({
   return (
     <form
       method="get"
-      className="mb-4 grid grid-cols-2 gap-2 rounded-lg border border-[#D5D8DC] bg-white p-3 md:grid-cols-3 lg:flex lg:flex-wrap lg:items-center"
+      className="mb-4 grid grid-cols-2 gap-2 rounded-lg border border-white/10 bg-[#15151E] p-3 md:grid-cols-3 lg:flex lg:flex-wrap lg:items-center"
     >
       <Input name="q" type="search" value={params.q} placeholder="Procurar descrição…" wide />
       <Select name="tipo" value={params.tipo}>
@@ -221,7 +221,7 @@ function FiltersBar({
         Filtrar
       </button>
       {hasFilters && (
-        <Link href="/movimentos" className="text-sm font-medium text-primary-600 hover:underline lg:ml-auto">
+        <Link href="/movimentos" className="text-sm font-medium text-gold-500 hover:text-gold-400 hover:underline lg:ml-auto">
           Limpar
         </Link>
       )}
@@ -231,7 +231,7 @@ function FiltersBar({
 
 function Th({ children, align }: { children: React.ReactNode; align?: "right" }) {
   return (
-    <th className={`px-4 py-3 text-${align ?? "left"} text-xs font-bold uppercase tracking-wider text-[#4A4A5C]`}>
+    <th className={`px-4 py-3 text-${align ?? "left"} text-xs font-bold uppercase tracking-wider text-white/60`}>
       {children}
     </th>
   );
@@ -239,7 +239,7 @@ function Th({ children, align }: { children: React.ReactNode; align?: "right" })
 
 function Select({ name, value, children }: { name: string; value?: string; children: React.ReactNode }) {
   return (
-    <select name={name} defaultValue={value ?? ""} className="rounded-md border border-[#D5D8DC] bg-white px-3 py-2 text-sm">
+    <select name={name} defaultValue={value ?? ""} className="rounded-md border border-white/10 bg-[#15151E] px-3 py-2 text-sm">
       {children}
     </select>
   );
@@ -257,13 +257,13 @@ function Input({
       defaultValue={value}
       placeholder={placeholder}
       title={title}
-      className={`rounded-md border border-[#D5D8DC] bg-white px-3 py-2 text-sm ${wide ? "min-w-[220px] flex-1" : ""}`}
+      className={`rounded-md border border-white/10 bg-[#15151E] px-3 py-2 text-sm ${wide ? "min-w-[220px] flex-1" : ""}`}
     />
   );
 }
 
 function Badge({ children, tone }: { children: React.ReactNode; tone: "success" | "danger" }) {
-  const cls = tone === "success" ? "bg-success-bg text-success" : "bg-danger-bg text-danger";
+  const cls = tone === "success" ? "bg-emerald-500/15 text-emerald-400" : "bg-rose-500/15 text-rose-400";
   return <span className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${cls}`}>{children}</span>;
 }
 
@@ -271,7 +271,7 @@ function SummaryStrip({
   entradas, saidas, total, hasFilters,
 }: { entradas: number; saidas: number; total: number; hasFilters: boolean }) {
   return (
-    <div className="mb-4 flex flex-wrap gap-7 rounded-lg border border-[#D5D8DC] bg-white px-5 py-3.5">
+    <div className="mb-4 flex flex-wrap gap-7 rounded-lg border border-white/10 bg-[#15151E] px-5 py-3.5">
       <Stat label={`Entradas${hasFilters ? " (filtro)" : ""}`} value={`+ ${formatEUR(entradas)}`} tone="success" />
       <Stat label={`Saídas${hasFilters ? " (filtro)" : ""}`}   value={`- ${formatEUR(saidas)}`}   tone="danger" />
       <Stat label={`Saldo${hasFilters ? " (filtro)" : ""}`}    value={formatEUR(entradas - saidas)} tone="primary" />
@@ -286,13 +286,13 @@ function Stat({ label, value, tone, className }: {
   className?: string;
 }) {
   const color =
-    tone === "success" ? "text-success" :
-    tone === "danger"  ? "text-danger"  :
-    tone === "primary" ? "text-primary-600" :
-                         "text-ink";
+    tone === "success" ? "text-emerald-400" :
+    tone === "danger"  ? "text-rose-400"  :
+    tone === "primary" ? "text-white" :
+                         "text-white";
   return (
     <div className={className}>
-      <div className="text-[11px] font-bold uppercase tracking-wider text-[#4A4A5C]">{label}</div>
+      <div className="text-[11px] font-bold uppercase tracking-wider text-white/60">{label}</div>
       <div className={`mt-0.5 text-xl font-bold tabular-nums ${color}`}>{value}</div>
     </div>
   );
@@ -307,21 +307,21 @@ function Pagination({ page, totalPages, params }: { page: number; totalPages: nu
   };
   return (
     <div className="mt-4 flex items-center justify-center gap-2">
-      {page > 1 && <Link href={linkFor(page - 1)} className="rounded border border-[#D5D8DC] bg-white px-3 py-1.5 text-sm hover:bg-primary-50">‹ Anterior</Link>}
-      <span className="text-sm text-[#4A4A5C]">Página {page} de {totalPages}</span>
-      {page < totalPages && <Link href={linkFor(page + 1)} className="rounded border border-[#D5D8DC] bg-white px-3 py-1.5 text-sm hover:bg-primary-50">Seguinte ›</Link>}
+      {page > 1 && <Link href={linkFor(page - 1)} className="rounded border border-white/10 bg-[#15151E] px-3 py-1.5 text-sm hover:bg-white/5">‹ Anterior</Link>}
+      <span className="text-sm text-white/60">Página {page} de {totalPages}</span>
+      {page < totalPages && <Link href={linkFor(page + 1)} className="rounded border border-white/10 bg-[#15151E] px-3 py-1.5 text-sm hover:bg-white/5">Seguinte ›</Link>}
     </div>
   );
 }
 
 function EmptyState({ hasFilters }: { hasFilters: boolean }) {
   return (
-    <div className="rounded-2xl border-2 border-dashed border-primary-200 bg-white p-10 text-center">
-      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-50 text-2xl">📒</div>
+    <div className="rounded-2xl border-2 border-dashed border-white/15 bg-[#15151E] p-10 text-center">
+      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white/5 text-2xl">📒</div>
       <h3 className="text-xl font-bold">
         {hasFilters ? "Sem movimentos no filtro atual" : "Sem movimentos"}
       </h3>
-      <p className="mt-2 mb-5 text-sm text-[#4A4A5C]">
+      <p className="mt-2 mb-5 text-sm text-white/60">
         {hasFilters ? "Ajusta ou limpa os filtros para ver outros resultados." : "Regista o primeiro movimento para começar."}
       </p>
       <div className="flex justify-center gap-3 flex-wrap">

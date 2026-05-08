@@ -10,24 +10,32 @@ type SearchParams = Promise<{ sent?: string; email?: string; error?: string; red
 export default async function EntrarPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
 
-  // Se já está autenticado, vai direto
   const user = await getUser();
   if (user) redirect(params.redirect || "/dashboard");
 
   const sent = params.sent === "1";
 
   return (
-    <main className="min-h-screen bg-primary-50/30 flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-md">
+    <main className="relative min-h-screen overflow-hidden bg-[#0A0A0F] flex items-center justify-center px-6 py-12">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-40 -top-40 h-96 w-96 rounded-full bg-primary-500/15 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-40 bottom-0 h-96 w-96 rounded-full bg-gold-500/10 blur-3xl"
+      />
+
+      <div className="relative w-full max-w-md">
         <Link href="/" className="mb-8 flex items-center gap-3 justify-center" aria-label="MAPA Tesouraria — by GI ADVISE">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/gi-mark.svg" alt="" className="h-10 w-10" />
-          <span className="text-xl font-extrabold tracking-tight text-primary-600">
-            MAPA <span className="font-normal italic text-primary-400">Tesouraria</span>
+          <img src="/brand/gi-mark.svg" alt="" className="h-10 w-10 [filter:brightness(0)_invert(1)]" />
+          <span className="text-xl font-extrabold tracking-tight text-white">
+            MAPA <span className="font-normal italic text-white/70">Tesouraria</span>
           </span>
         </Link>
 
-        <div className="rounded-2xl border border-primary-100 bg-white p-8 shadow-md">
+        <div className="rounded-2xl border border-white/10 bg-[#15151E] p-8 shadow-xl">
           {sent ? (
             <SuccessView email={params.email ?? ""} />
           ) : (
@@ -35,7 +43,7 @@ export default async function EntrarPage({ searchParams }: { searchParams: Searc
           )}
         </div>
 
-        <p className="mt-6 text-center text-xs text-[#4A4A5C]">
+        <p className="mt-6 text-center text-xs text-white/55">
           ✓ Aprovado por Contabilista Certificado · CC nº 32897
         </p>
       </div>
@@ -71,15 +79,15 @@ function errorHelp(code: string) {
 function FormView({ error, redirectTo }: { error?: string; redirectTo?: string }) {
   return (
     <>
-      <h1 className="text-2xl font-bold mb-2">Entrar</h1>
-      <p className="text-sm text-[#4A4A5C] mb-6">
+      <h1 className="text-2xl font-bold mb-2 text-white">Entrar</h1>
+      <p className="text-sm text-white/60 mb-6">
         Recebes um link mágico no email para entrar sem password.
       </p>
 
       <form action={sendMagicLink} className="space-y-4">
         {redirectTo && <input type="hidden" name="redirect" value={redirectTo} />}
         <div>
-          <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-[#4A4A5C] mb-2">
+          <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-white/55 mb-2">
             Email
           </label>
           <input
@@ -89,14 +97,14 @@ function FormView({ error, redirectTo }: { error?: string; redirectTo?: string }
             required
             autoFocus
             placeholder="o-teu-email@empresa.pt"
-            className="w-full rounded-md border border-[#D5D8DC] bg-white px-4 py-3 text-base focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20"
+            className="w-full rounded-md border border-white/15 bg-white/5 px-4 py-3 text-base text-white placeholder-white/30 focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
           />
         </div>
 
         {error && (
-          <div className="rounded-md border border-danger/30 bg-danger-bg px-4 py-3 text-sm text-danger">
+          <div className="rounded-md border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
             <strong className="block mb-1">{errorTitle(error)}</strong>
-            <span className="text-danger/85">{errorHelp(error)}</span>
+            <span className="text-rose-300/85">{errorHelp(error)}</span>
           </div>
         )}
 
@@ -105,9 +113,9 @@ function FormView({ error, redirectTo }: { error?: string; redirectTo?: string }
         </button>
       </form>
 
-      <p className="mt-6 text-center text-xs text-[#4A4A5C]">
+      <p className="mt-6 text-center text-xs text-white/55">
         Não tens conta?{" "}
-        <span className="text-primary-600 font-semibold">
+        <span className="text-gold-500 font-semibold">
           O link mágico cria automaticamente quando entras pela primeira vez.
         </span>
       </p>
@@ -118,20 +126,20 @@ function FormView({ error, redirectTo }: { error?: string; redirectTo?: string }
 function SuccessView({ email }: { email: string }) {
   return (
     <div className="text-center">
-      <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-success-bg text-3xl">
+      <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15 border border-emerald-500/30 text-3xl">
         ✉️
       </div>
-      <h1 className="text-2xl font-bold mb-2">Verifica o teu email</h1>
-      <p className="text-sm text-[#4A4A5C] mb-2">
+      <h1 className="text-2xl font-bold mb-2 text-white">Verifica o teu email</h1>
+      <p className="text-sm text-white/60 mb-2">
         Enviámos um link de acesso para
       </p>
       {email && (
-        <p className="text-base font-semibold text-primary-700 mb-6 break-all">{email}</p>
+        <p className="text-base font-semibold text-gold-500 mb-6 break-all">{email}</p>
       )}
-      <p className="text-sm text-[#4A4A5C] mb-6">
+      <p className="text-sm text-white/60 mb-6">
         Abre o email e clica no botão para entrar. Pode demorar 1–2 minutos a chegar — verifica também o spam.
       </p>
-      <Link href="/entrar" className="text-sm font-semibold text-primary-600 hover:underline">
+      <Link href="/entrar" className="text-sm font-semibold text-gold-500 hover:text-gold-400 hover:underline">
         ← Usar outro email
       </Link>
     </div>

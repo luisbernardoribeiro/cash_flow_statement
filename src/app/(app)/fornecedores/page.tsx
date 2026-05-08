@@ -43,14 +43,14 @@ export default async function FornecedoresPage({ searchParams }: { searchParams:
       <Toast type={params.ok || params.error} />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-        <div className="overflow-hidden rounded-lg border border-[#D5D8DC] bg-white">
+        <div className="overflow-hidden rounded-lg border border-white/10 bg-[#15151E]">
           {/* Mobile: cards */}
-          <ul className="divide-y divide-[#D5D8DC] md:hidden">
+          <ul className="divide-y divide-white/10 md:hidden">
             {rows.map((s) => (
-              <li key={s.id} className="flex items-start justify-between gap-3 px-4 py-3 hover:bg-primary-50/30">
+              <li key={s.id} className="flex items-start justify-between gap-3 px-4 py-3 hover:bg-white/5">
                 <div className="min-w-0 flex-1">
                   <div className="font-medium">{s.name}</div>
-                  <div className="mt-0.5 text-xs text-[#4A4A5C]">
+                  <div className="mt-0.5 text-xs text-white/60">
                     {s.nif && <span className="tabular-nums">NIF {s.nif}</span>}
                     {s.nif && s.email && " · "}
                     {s.email && <span className="break-all">{s.email}</span>}
@@ -60,50 +60,50 @@ export default async function FornecedoresPage({ searchParams }: { searchParams:
                   </div>
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-2 text-xs">
-                  <a href={`/fornecedores?edit=${s.id}`} className="font-semibold text-primary-600 hover:underline">Editar</a>
+                  <a href={`/fornecedores?edit=${s.id}`} className="font-semibold text-gold-500 hover:text-gold-400 hover:underline">Editar</a>
                   <form action={deleteSupplier}>
                     <input type="hidden" name="id" value={s.id} />
-                    <button type="submit" className="font-semibold text-danger hover:underline">Apagar</button>
+                    <button type="submit" className="font-semibold text-rose-400 hover:underline">Apagar</button>
                   </form>
                 </div>
               </li>
             ))}
             {rows.length === 0 && (
-              <li className="px-4 py-8 text-center text-sm text-[#4A4A5C]">Sem fornecedores.</li>
+              <li className="px-4 py-8 text-center text-sm text-white/60">Sem fornecedores.</li>
             )}
           </ul>
 
           {/* Desktop: tabela */}
           <table className="hidden w-full text-sm md:table">
-            <thead className="bg-primary-50/60">
+            <thead className="bg-white/5">
               <tr><Th>Nome</Th><Th>NIF</Th><Th>Email</Th><Th align="right">Movimentos</Th><Th /></tr>
             </thead>
             <tbody>
               {rows.map((s) => (
-                <tr key={s.id} className="border-t border-[#D5D8DC] hover:bg-primary-50/30">
+                <tr key={s.id} className="border-t border-white/10 hover:bg-white/5">
                   <td className="px-4 py-3 font-medium">{s.name}</td>
-                  <td className="px-4 py-3 text-[#4A4A5C] tabular-nums">{s.nif ?? "—"}</td>
-                  <td className="px-4 py-3 text-[#4A4A5C]">{s.email ?? "—"}</td>
+                  <td className="px-4 py-3 text-white/60 tabular-nums">{s.nif ?? "—"}</td>
+                  <td className="px-4 py-3 text-white/60">{s.email ?? "—"}</td>
                   <td className="px-4 py-3 text-right tabular-nums">{s.usage}</td>
                   <td className="px-4 py-3 text-right">
                     <div className="inline-flex gap-2">
-                      <a href={`/fornecedores?edit=${s.id}`} className="text-xs font-semibold text-primary-600 hover:underline">Editar</a>
+                      <a href={`/fornecedores?edit=${s.id}`} className="text-xs font-semibold text-gold-500 hover:text-gold-400 hover:underline">Editar</a>
                       <form action={deleteSupplier}>
                         <input type="hidden" name="id" value={s.id} />
-                        <button type="submit" className="text-xs font-semibold text-danger hover:underline">Apagar</button>
+                        <button type="submit" className="text-xs font-semibold text-rose-400 hover:underline">Apagar</button>
                       </form>
                     </div>
                   </td>
                 </tr>
               ))}
               {rows.length === 0 && (
-                <tr><td colSpan={5} className="px-4 py-8 text-center text-[#4A4A5C]">Sem fornecedores.</td></tr>
+                <tr><td colSpan={5} className="px-4 py-8 text-center text-white/60">Sem fornecedores.</td></tr>
               )}
             </tbody>
           </table>
         </div>
 
-        <div className="rounded-2xl border border-[#D5D8DC] bg-white p-6 h-fit">
+        <div className="rounded-2xl border border-white/10 bg-[#15151E] p-6 h-fit">
           <h3 className="mb-4 text-base font-bold">
             {editing ? "Editar fornecedor" : "+ Novo fornecedor"}
           </h3>
@@ -112,17 +112,17 @@ export default async function FornecedoresPage({ searchParams }: { searchParams:
             <Field label="Nome" required>
               <input name="name" type="text" required maxLength={120} defaultValue={editing?.name ?? ""}
                 placeholder="Ex.: Recheio"
-                className="w-full rounded-md border border-[#D5D8DC] bg-white px-3 py-2 text-sm focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20" />
+                className="w-full rounded-md border border-white/10 bg-[#15151E] px-3 py-2 text-sm focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20" />
             </Field>
             <Field label="NIF">
               <input name="nif" type="text" inputMode="numeric" pattern="[0-9]{9}" maxLength={9}
                 defaultValue={editing?.nif ?? ""} placeholder="500000000"
-                className="w-full rounded-md border border-[#D5D8DC] bg-white px-3 py-2 text-sm focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20" />
+                className="w-full rounded-md border border-white/10 bg-[#15151E] px-3 py-2 text-sm focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20" />
             </Field>
             <Field label="Email">
               <input name="email" type="email" defaultValue={editing?.email ?? ""}
                 placeholder="contacto@empresa.pt"
-                className="w-full rounded-md border border-[#D5D8DC] bg-white px-3 py-2 text-sm focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20" />
+                className="w-full rounded-md border border-white/10 bg-[#15151E] px-3 py-2 text-sm focus:border-gold-500/60 focus:outline-none focus:ring-2 focus:ring-gold-500/20" />
             </Field>
             <div className="flex justify-between gap-2 pt-2">
               {editing && <a href="/fornecedores" className="btn btn-ghost text-sm">Cancelar</a>}
@@ -136,12 +136,12 @@ export default async function FornecedoresPage({ searchParams }: { searchParams:
 }
 
 function Th({ children, align }: { children?: React.ReactNode; align?: "right" }) {
-  return <th className={`px-4 py-3 text-${align ?? "left"} text-xs font-bold uppercase tracking-wider text-[#4A4A5C]`}>{children}</th>;
+  return <th className={`px-4 py-3 text-${align ?? "left"} text-xs font-bold uppercase tracking-wider text-white/60`}>{children}</th>;
 }
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <div>
-      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">{label} {required && <span className="text-danger">*</span>}</label>
+      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-white/60">{label} {required && <span className="text-rose-400">*</span>}</label>
       {children}
     </div>
   );
@@ -156,6 +156,6 @@ function Toast({ type }: { type?: string }) {
   };
   const m = messages[type];
   if (!m) return null;
-  const cls = m.tone === "success" ? "border-success/30 bg-success-bg text-success" : "border-danger/30 bg-danger-bg text-danger";
+  const cls = m.tone === "success" ? "border-success/30 bg-emerald-500/15 text-emerald-400" : "border-danger/30 bg-rose-500/15 text-rose-400";
   return <div className={`mb-4 rounded-md border ${cls} px-4 py-2.5 text-sm font-medium`}>{m.text}</div>;
 }

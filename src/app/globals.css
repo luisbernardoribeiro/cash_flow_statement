@@ -5,16 +5,18 @@
 @layer base {
   html {
     font-family: theme(fontFamily.body);
-    color: theme(colors.ink);
+    color: rgba(255, 255, 255, 0.9);
     -webkit-font-smoothing: antialiased;
+    background: #0A0A0F;
   }
   body {
-    background: #fff;
+    background: #0A0A0F;
+    color: rgba(255, 255, 255, 0.9);
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: theme(fontFamily.display);
     font-weight: 700;
-    color: theme(colors.ink);
+    color: #ffffff;
   }
 }
 
@@ -23,17 +25,16 @@
     @apply inline-flex items-center gap-2 rounded-md px-5 py-3 font-semibold text-base transition-all;
   }
   .btn-primary {
-    @apply bg-primary-600 text-white shadow-md hover:bg-primary-700 hover:shadow-lg hover:-translate-y-px;
+    @apply bg-gold-500 text-ink shadow-md hover:bg-gold-600 hover:shadow-lg hover:-translate-y-px;
   }
   .btn-ghost {
-    @apply border border-primary-200 bg-transparent text-primary-600 hover:bg-primary-50;
+    @apply border border-white/15 bg-white/5 text-white/85 hover:bg-white/10 hover:text-white;
   }
   .cc-badge {
-    @apply inline-flex items-center gap-2.5 rounded-full border border-primary-200 px-4 py-2 text-sm font-semibold text-primary-700;
-    background: linear-gradient(135deg, theme(colors.primary.50), #fff);
+    @apply inline-flex items-center gap-2.5 rounded-full border border-gold-500/40 bg-gold-500/10 px-4 py-2 text-sm font-semibold text-gold-500;
   }
   .cc-badge::before {
     content: "✓";
-    @apply flex h-[22px] w-[22px] items-center justify-center rounded-full bg-gold-500 text-white text-xs font-bold;
+    @apply flex h-[22px] w-[22px] items-center justify-center rounded-full bg-gold-500 text-ink text-xs font-bold;
   }
 }

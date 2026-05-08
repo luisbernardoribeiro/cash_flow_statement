@@ -57,29 +57,29 @@ export default async function MovimentoDetalhePage({
       />
 
       {updated && (
-        <div className="mb-4 rounded-md border border-success/30 bg-success-bg px-4 py-2.5 text-sm font-medium text-success">
+        <div className="mb-4 rounded-md border border-success/30 bg-emerald-500/15 px-4 py-2.5 text-sm font-medium text-emerald-400">
           ✓ Movimento atualizado com sucesso.
         </div>
       )}
 
       <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
-        <div className="rounded-2xl border border-[#D5D8DC] bg-white p-7 shadow-sm">
+        <div className="rounded-2xl border border-white/10 bg-[#15151E] p-7 shadow-sm">
           <div className="mb-6 flex items-start justify-between gap-4">
             <div>
               <span className={`inline-block rounded-full px-3 py-1 text-xs font-bold ${
-                isIn ? "bg-success-bg text-success" : "bg-danger-bg text-danger"
+                isIn ? "bg-emerald-500/15 text-emerald-400" : "bg-rose-500/15 text-rose-400"
               }`}>
                 {isIn ? "Entrada" : "Saída"}
               </span>
               <h2 className="mt-3 text-2xl font-bold">{row.description}</h2>
-              <p className="mt-1 text-sm text-[#4A4A5C]">{formatDate(row.date)}</p>
+              <p className="mt-1 text-sm text-white/60">{formatDate(row.date)}</p>
             </div>
-            <div className={`text-3xl font-extrabold tabular-nums ${isIn ? "text-success" : "text-danger"}`}>
+            <div className={`text-3xl font-extrabold tabular-nums ${isIn ? "text-emerald-400" : "text-rose-400"}`}>
               {isIn ? "+ " : "- "}{formatEUR(amount)}
             </div>
           </div>
 
-          <dl className="grid grid-cols-2 gap-4 border-t border-[#D5D8DC] pt-5">
+          <dl className="grid grid-cols-2 gap-4 border-t border-white/10 pt-5">
             <Field label="Categoria">{row.categoryName ?? "—"}</Field>
             <Field label="Fornecedor / Cliente">{row.supplierName ?? "—"}</Field>
             <Field label="Conta">{row.accountName ?? "—"}</Field>
@@ -87,13 +87,13 @@ export default async function MovimentoDetalhePage({
           </dl>
 
           {row.notes && (
-            <div className="mt-5 border-t border-[#D5D8DC] pt-5">
-              <div className="text-xs font-bold uppercase tracking-wider text-[#4A4A5C] mb-2">Notas</div>
+            <div className="mt-5 border-t border-white/10 pt-5">
+              <div className="text-xs font-bold uppercase tracking-wider text-white/60 mb-2">Notas</div>
               <p className="whitespace-pre-line text-sm">{row.notes}</p>
             </div>
           )}
 
-          <div className="mt-7 flex justify-between gap-3 border-t border-[#D5D8DC] pt-5">
+          <div className="mt-7 flex justify-between gap-3 border-t border-white/10 pt-5">
             <Link href="/movimentos" className="btn btn-ghost">← Voltar</Link>
             <div className="flex gap-3">
               <Link href={`/movimentos/${row.id}/editar`} className="btn btn-primary">
@@ -103,7 +103,7 @@ export default async function MovimentoDetalhePage({
                 <input type="hidden" name="id" value={row.id} />
                 <button
                   type="submit"
-                  className="rounded-md border border-danger/30 bg-danger-bg px-5 py-2.5 text-sm font-semibold text-danger hover:bg-danger hover:text-white transition-colors"
+                  className="rounded-md border border-danger/30 bg-rose-500/15 px-5 py-2.5 text-sm font-semibold text-rose-400 hover:bg-danger hover:text-white transition-colors"
                 >
                   Apagar
                 </button>
@@ -112,10 +112,10 @@ export default async function MovimentoDetalhePage({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-primary-200 bg-primary-50/40 p-6">
-          <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-primary-700">Identificação</h3>
-          <p className="font-mono text-xs text-[#4A4A5C] break-all">{row.id}</p>
-          <p className="mt-4 text-xs text-[#4A4A5C]">
+        <div className="rounded-2xl border border-white/15 bg-white/5 p-6">
+          <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-gold-500">Identificação</h3>
+          <p className="font-mono text-xs text-white/60 break-all">{row.id}</p>
+          <p className="mt-4 text-xs text-white/60">
             ID único deste movimento. Útil para suporte ou auditoria.
           </p>
         </div>
@@ -127,7 +127,7 @@ export default async function MovimentoDetalhePage({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <dt className="text-xs font-bold uppercase tracking-wider text-[#4A4A5C]">{label}</dt>
+      <dt className="text-xs font-bold uppercase tracking-wider text-white/60">{label}</dt>
       <dd className="mt-1 text-base">{children}</dd>
     </div>
   );
