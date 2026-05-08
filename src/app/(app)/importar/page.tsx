@@ -15,9 +15,9 @@ export default async function ImportarPage({ searchParams }: { searchParams: Sea
   return (
     <div className="px-10 py-7">
       <PageHeader
-        title="Importar Excel"
-        breadcrumb={[{ label: "Início", href: "/dashboard" }, { label: "Importar Excel" }]}
-        sub="Carrega o teu mapa de tesouraria em formato Excel para popular a app de uma só vez."
+        title="Importar histórico"
+        breadcrumb={[{ label: "Início", href: "/dashboard" }, { label: "Importar histórico" }]}
+        sub="Já usavas o mapa de tesouraria da GI em Excel? Carrega aqui o ficheiro para passar o histórico todo para a app de uma só vez."
       />
 
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
@@ -64,22 +64,23 @@ export default async function ImportarPage({ searchParams }: { searchParams: Sea
         </div>
 
         <div className="rounded-2xl border border-primary-200 bg-primary-50/40 p-6">
-          <h3 className="mb-3 text-base font-bold text-primary-700">📋 Formato esperado</h3>
+          <h3 className="mb-3 text-base font-bold text-primary-700">📋 Template GI esperado</h3>
           <p className="mb-4 text-sm text-[#4A4A5C]">
-            A app aceita o template <strong>MAPA Tesouraria</strong>, com as seguintes colunas:
+            Esta app é a versão digital do <strong>mapa de tesouraria desenhado pelo Alípio Monteiro (CC nº 32897)</strong>. O importador aceita o template GI em Excel, com estas colunas:
           </p>
           <ul className="space-y-2 text-sm">
             <Col name="Data" required note="Formato dd/mm/yyyy ou Excel date" />
             <Col name="Tipo" required note="Entrada ou Saída" />
             <Col name="Descrição" required />
-            <Col name="Categoria" note="Cria-se se não existir" />
+            <Col name="Categoria" note="Já tens as 20 categorias GI; novas criam-se" />
             <Col name="Fornecedor" note="Cria-se se não existir" />
-            <Col name="Conta" note="Tem de existir nas tuas Contas" />
+            <Col name="Conta" note="Caixa, TPA ou Banco" />
             <Col name="Valor" required note="Número positivo" />
             <Col name="Notas" />
           </ul>
-          <p className="mt-4 text-xs text-[#4A4A5C]">
-            <strong>Dica:</strong> tens o ficheiro <code className="rounded bg-white px-1 py-0.5 text-primary-700">MAPA_FLUXOS_TESOURARIA.xlsx</code> com 221 movimentos demo na pasta do projeto.
+          <p className="mt-4 rounded bg-white/70 p-3 text-xs text-[#4A4A5C]">
+            <strong className="text-primary-700">Quem deve usar isto?</strong><br />
+            Clientes da GI que já têm <strong>movimentos registados</strong> no Excel do Alípio e querem trazer o histórico para a app sem voltar a digitar.
           </p>
         </div>
       </div>

@@ -35,8 +35,8 @@ export default function HomePage() {
               <em className="not-italic text-primary-600">sempre atualizado</em>.
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-[#4A4A5C] lg:text-xl">
-              A plataforma desenvolvida por <strong>Contabilista Certificado</strong> para PMEs
-              portuguesas controlarem entradas, saídas e saldo em tempo real — no computador e no telemóvel.
+              O método de tesouraria do <strong>Alípio Monteiro CC</strong> — anos de experiência
+              com PMEs — agora em app: categorias certas, fluxos prontos, no computador e no telemóvel.
             </p>
             <div className="mt-7 flex flex-wrap gap-4">
               <Link href="/registar" className="btn btn-primary">

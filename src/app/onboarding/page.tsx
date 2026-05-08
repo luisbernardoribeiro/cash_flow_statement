@@ -35,10 +35,14 @@ export default async function OnboardingPage({ searchParams }: { searchParams: S
 
         <div className="rounded-2xl border border-primary-100 bg-white p-8 shadow-md">
           <h1 className="text-2xl font-bold mb-2">Bem-vindo ao MAPA 👋</h1>
-          <p className="text-sm text-[#4A4A5C] mb-7">
-            Para começares, regista a tua empresa. Vamos criar categorias e contas
-            por defeito (podes ajustar tudo depois).
+          <p className="text-sm text-[#4A4A5C] mb-2">
+            Para começares, regista a tua empresa. Ao criar, vamos preparar a app com:
           </p>
+          <ul className="mb-6 space-y-1 text-sm text-[#4A4A5C]">
+            <li>✓ <strong className="text-ink">20 categorias</strong> do método Alípio Monteiro CC (Vendas Diárias, Compras, Renda, Vencimentos…)</li>
+            <li>✓ <strong className="text-ink">3 contas</strong> base (Caixa, TPA, Banco) — podes adicionar mais</li>
+            <li>✓ Estrutura pronta para começar a registar movimentos</li>
+          </ul>
 
           <form action={createOrganization} className="space-y-4">
             <div>
